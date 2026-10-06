@@ -5,51 +5,13 @@ import { useAmbient } from "./audio-provider";
 
 export default function HeroBar() {
   return (
-    <div className="hero-bar">
-      <TimeWidget />
+    <div className="hero-bar" aria-label="Pond controls">
       <div className="hero-controls">
         <AmbientToggle />
         <ThemeToggle />
         <Todo />
       </div>
     </div>
-  );
-}
-
-const FORMAT = new Intl.DateTimeFormat("en-US", {
-  timeZone: "Asia/Kolkata",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true,
-});
-
-const clock = () =>
-  FORMAT.format(new Date()).replace(/\s?(AM|PM)/i, (_, ap: string) => ap.toLowerCase());
-
-function TimeWidget() {
-  const [now, setNow] = useState("");
-
-  useEffect(() => {
-    setNow(clock());
-    const id = window.setInterval(() => setNow(clock()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return (
-    <span className="time-widget">
-      <a
-        className="name-link"
-        href="https://github.com/vishwa-io"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Vishwa on GitHub"
-        title="Vishwa on GitHub"
-      >
-        Vishwa
-      </a>
-      <span aria-hidden="true"> | </span>
-      <span className="time-widget-clock">{now || "00:00am"}</span>
-    </span>
   );
 }
 
