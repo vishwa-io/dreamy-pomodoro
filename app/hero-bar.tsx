@@ -36,7 +36,17 @@ function TimeWidget() {
 
   return (
     <span className="time-widget">
-      bangalore, ka | <span className="time-widget-clock">{now || "00:00am"}</span>
+      <a
+        className="name-link"
+        href="https://github.com/vishwa-io"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Vishwa on GitHub"
+      >
+        Vishwa
+      </a>
+      <span aria-hidden="true"> | </span>
+      <span className="time-widget-clock">{now || "00:00am"}</span>
     </span>
   );
 }
@@ -161,12 +171,7 @@ function Todo() {
             ))}
           </div>
           <form className="todo-add" onSubmit={(event) => { event.preventDefault(); addTask(); }}>
-            <input
-              value={task}
-              onChange={(event) => setTask(event.target.value)}
-              placeholder="add a task"
-              aria-label="New task"
-            />
+            <input value={task} onChange={(event) => setTask(event.target.value)} placeholder="add a task" aria-label="New task" />
             <button type="submit" aria-label="Add task">+</button>
           </form>
         </div>
