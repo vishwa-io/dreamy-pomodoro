@@ -1,13 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari, Noto_Naskh_Arabic, Gaegu } from "next/font/google";
 import "./globals.css";
+import "./dreamy.css";
 import SiteBehaviour from "./site-behaviour";
 import Dock from "./dock";
 import ThemeToggle from "./theme-toggle";
 import AudioProvider from "./audio-provider";
 
-// Self-hosted at build time — no runtime CDN request. Exposed as --font-inter,
-// which globals.css feeds into the --font-sf token.
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500"],
@@ -15,8 +14,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-// Inter has no Devanagari or Arabic coverage, so the name in those scripts
-// would otherwise fall back to whatever the OS happens to have.
 const devanagari = Noto_Sans_Devanagari({
   subsets: ["devanagari"],
   weight: ["400"],
@@ -31,7 +28,6 @@ const arabic = Noto_Naskh_Arabic({
   variable: "--font-arabic",
 });
 
-// The swans' handwritten remarks in the pond (--font-hand, picked up by .pond-say).
 const hand = Gaegu({
   subsets: ["latin"],
   weight: "700",
@@ -40,8 +36,8 @@ const hand = Gaegu({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio — Homepage",
-  description: "Single-column portfolio homepage.",
+  title: "Dreamy Pomodoro",
+  description: "A quiet Pomodoro timer by the swan pond.",
 };
 
 export const viewport: Viewport = {
@@ -49,13 +45,9 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e0e0e" },
-  ],
+  themeColor: "#0e0e0e",
 };
 
-// Runs before first paint so there's no flash of the wrong palette.
 const themeInit = `
 (function(){
   try{
@@ -82,7 +74,6 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body>
-        {/* Mounted once here, so the music carries on across page changes. */}
         <AudioProvider>
           <ThemeToggle />
           {children}
