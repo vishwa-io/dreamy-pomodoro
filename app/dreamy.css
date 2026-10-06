@@ -18,7 +18,13 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
   pointer-events: none;
   text-shadow: 0 1px 14px rgba(0,0,0,.38);
 }
-.social-nav::after { content: ""; display: block; }
+.social-identity {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  pointer-events: auto;
+}
 .social-brand {
   color: rgba(255,255,255,.88);
   font-family: var(--font-delius), cursive;
@@ -29,6 +35,15 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
   transition: color .2s ease, opacity .2s ease;
 }
 .social-brand:hover, .social-brand:focus-visible { color: #fff; outline: none; }
+.social-time {
+  color: rgba(255,255,255,.65);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 .social-links { display: flex; align-items: center; gap: 10px; pointer-events: auto; }
 .social-link {
   display: grid;
@@ -97,6 +112,7 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   pointer-events: auto;
 }
+
 .control-icon { display: grid; place-items: center; flex: 0 0 auto; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: rgba(255,255,255,.74); cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, transform .2s ease; }
 .control-icon:hover, .control-icon:focus-visible { background: rgba(255,255,255,.08); color: #fff; outline: none; }
 .control-icon:active { transform: scale(.92); }
@@ -139,7 +155,9 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 
 @media (max-width: 700px) {
   .social-nav { left: 16px; right: 16px; top: 15px; }
+  .social-identity { gap: 5px; }
   .social-brand { font-size: 17px; }
+  .social-time { font-size: 10px; }
   .social-links { gap: 4px; }
   .social-link { width: 27px; height: 27px; }
   .pond-filters { right: 16px; gap: 12px; }
