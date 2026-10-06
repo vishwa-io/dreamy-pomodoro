@@ -6,7 +6,6 @@ export default function Home() {
   return (
     <main className="dreamy-pomodoro">
       <PondHero />
-
       <div className="dreamy-overlay">
         <HeroBar />
         <Pomodoro />
