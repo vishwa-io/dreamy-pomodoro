@@ -23,7 +23,8 @@ const FORMAT = new Intl.DateTimeFormat("en-US", {
   hour12: true,
 });
 
-const clock = () => FORMAT.format(new Date()).replace(/\s?(AM|PM)/i, (_, ap: string) => ap.toLowerCase());
+const clock = () =>
+  FORMAT.format(new Date()).replace(/\s?(AM|PM)/i, (_, ap: string) => ap.toLowerCase());
 
 function TimeWidget() {
   const [now, setNow] = useState("");
@@ -42,6 +43,7 @@ function TimeWidget() {
         target="_blank"
         rel="noreferrer"
         aria-label="Vishwa on GitHub"
+        title="Vishwa on GitHub"
       >
         Vishwa
       </a>
@@ -171,7 +173,12 @@ function Todo() {
             ))}
           </div>
           <form className="todo-add" onSubmit={(event) => { event.preventDefault(); addTask(); }}>
-            <input value={task} onChange={(event) => setTask(event.target.value)} placeholder="add a task" aria-label="New task" />
+            <input
+              value={task}
+              onChange={(event) => setTask(event.target.value)}
+              placeholder="add a task"
+              aria-label="New task"
+            />
             <button type="submit" aria-label="Add task">+</button>
           </form>
         </div>
