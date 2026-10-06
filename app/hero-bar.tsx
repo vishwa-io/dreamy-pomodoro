@@ -45,7 +45,13 @@ function AmbientToggle() {
   const { audible, toggle } = useAmbient();
 
   return (
-    <button className="control-icon" type="button" onClick={toggle} aria-label={audible ? "Mute music" : "Play music"} title={audible ? "Mute music" : "Play music"}>
+    <button
+      className="control-icon"
+      type="button"
+      onClick={toggle}
+      aria-label={audible ? "Mute music" : "Play music"}
+      title={audible ? "Mute music" : "Play music"}
+    >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M11 5 6 9H2v6h4l5 4V5Z" />
         {audible ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M19 5a10 10 0 0 1 0 14" /></> : <><path d="m22 9-6 6" /><path d="m16 9 6 6" /></>}
@@ -103,7 +109,10 @@ function Todo() {
 
   useEffect(() => {
     try {
-      localStorage.setItem("dreamy-tasks", JSON.stringify(tasks.map((text, i) => ({ text, done: checked[i] ?? false }))));
+      localStorage.setItem(
+        "dreamy-tasks",
+        JSON.stringify(tasks.map((text, i) => ({ text, done: checked[i] ?? false })))
+      );
     } catch {}
   }, [tasks, checked]);
 
@@ -122,13 +131,15 @@ function Todo() {
 
   return (
     <div className="todo-wrap">
-      <button className="todo-button" type="button" onClick={() => setOpen((value) => !value)} aria-label="Open todo list" aria-expanded={open} title="Todo list">
-        <span className="todo-button-checks" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </span>
-        <span className="todo-button-label">todo</span>
+      <button
+        className="todo-button"
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-label="Open todo list"
+        aria-expanded={open}
+        title="Todo list"
+      >
+        todo
       </button>
 
       {open && (
@@ -150,7 +161,12 @@ function Todo() {
             ))}
           </div>
           <form className="todo-add" onSubmit={(event) => { event.preventDefault(); addTask(); }}>
-            <input value={task} onChange={(event) => setTask(event.target.value)} placeholder="add a task" aria-label="New task" />
+            <input
+              value={task}
+              onChange={(event) => setTask(event.target.value)}
+              placeholder="add a task"
+              aria-label="New task"
+            />
             <button type="submit" aria-label="Add task">+</button>
           </form>
         </div>
