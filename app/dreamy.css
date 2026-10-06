@@ -5,11 +5,79 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .dreamy-pomodoro > .pond-hero canvas { width: 100%; height: 100%; }
 .dreamy-overlay { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
 
-.hero-bar { position: absolute; inset: 0; pointer-events: none; color: rgba(255,255,255,.82); text-shadow: 0 1px 14px rgba(0,0,0,.38); }
-.time-widget { position: absolute; top: 18px; left: 20px; display: inline-block; padding-top: 2px; font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 400; line-height: 18px; letter-spacing: .025em; white-space: nowrap; }
-.name-link { color: rgba(255,255,255,.86); font-family: var(--font-delius), cursive; font-size: 14px; font-weight: 400; letter-spacing: .01em; text-decoration: none; transition: color .2s ease, opacity .2s ease; }
-.name-link:hover, .name-link:focus-visible { color: #fff; opacity: 1; text-decoration: underline; text-underline-offset: 3px; outline: none; }
+.social-nav {
+  position: fixed;
+  top: 18px;
+  left: 20px;
+  right: 20px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  pointer-events: none;
+  text-shadow: 0 1px 14px rgba(0,0,0,.38);
+}
+.social-nav::after { content: ""; display: block; }
+.social-brand {
+  color: rgba(255,255,255,.88);
+  font-family: var(--font-delius), cursive;
+  font-size: 18px;
+  line-height: 22px;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: color .2s ease, opacity .2s ease;
+}
+.social-brand:hover, .social-brand:focus-visible { color: #fff; outline: none; }
+.social-links { display: flex; align-items: center; gap: 10px; pointer-events: auto; }
+.social-link {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  color: rgba(255,255,255,.72);
+  text-decoration: none;
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+.social-link:hover, .social-link:focus-visible { color: #fff; background: rgba(255,255,255,.07); border-radius: 50%; outline: none; }
+.social-link:active { transform: scale(.92); }
+.social-link svg { display: block; }
 
+.pond-filters {
+  position: fixed;
+  top: 50%;
+  right: 27px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  text-shadow: 0 1px 12px rgba(0,0,0,.45);
+}
+.pond-filter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,.46);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  cursor: pointer;
+  transition: color .2s ease, transform .25s ease;
+}
+.pond-filter:hover, .pond-filter:focus-visible, .pond-filter.active { color: rgba(255,255,255,.9); outline: none; }
+.pond-filter.active { transform: translateX(-1px); }
+.pond-filter-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: 0; transition: opacity .2s ease; }
+.pond-filter.active .pond-filter-dot { opacity: 1; }
+
+.hero-bar { position: absolute; inset: 0; pointer-events: none; color: rgba(255,255,255,.82); text-shadow: 0 1px 14px rgba(0,0,0,.38); }
 .hero-controls {
   position: fixed;
   left: 50%;
@@ -29,7 +97,6 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   pointer-events: auto;
 }
-
 .control-icon { display: grid; place-items: center; flex: 0 0 auto; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: rgba(255,255,255,.74); cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, transform .2s ease; }
 .control-icon:hover, .control-icon:focus-visible { background: rgba(255,255,255,.08); color: #fff; outline: none; }
 .control-icon:active { transform: scale(.92); }
@@ -70,9 +137,13 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .todo-add input::placeholder { color: rgba(255,255,255,.38); }
 .todo-add button { border: 0; padding: 0 3px; background: none; color: rgba(255,255,255,.72); font-family: var(--font-delius), cursive; font-size: 18px; cursor: pointer; }
 
-@media (max-width: 600px) {
-  .hero-bar { top: 15px; left: 16px; right: 16px; }
-  .time-widget { top: 15px; left: 16px; }
+@media (max-width: 700px) {
+  .social-nav { left: 16px; right: 16px; top: 15px; }
+  .social-brand { font-size: 17px; }
+  .social-links { gap: 4px; }
+  .social-link { width: 27px; height: 27px; }
+  .pond-filters { right: 16px; gap: 12px; }
+  .pond-filter { font-size: 11px; }
   .hero-controls { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); max-width: calc(100vw - 20px); }
   .control-icon { width: 28px; height: 28px; }
   .todo-button { height: 28px; font-size: 15px; padding: 0 6px; }
