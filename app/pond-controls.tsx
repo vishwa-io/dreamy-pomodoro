@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { hourFor, lookAt } from "./pond/time-of-day";
 
 const FILTERS = [
   { id: "dawn", label: "dawn" },
@@ -12,15 +13,16 @@ const FILTERS = [
 type Filter = (typeof FILTERS)[number]["id"];
 
 export default function PondControls() {
-  const [active, setActive] = useState<Filter | "auto">("auto");
+  const [active, setActive] = useState<Filter>("dark");
 
   useEffect(() => {
-    const search = new URLSearchParams(window.location.search);
-    const selected = search.get("time")?.toLowerCase();
+    const search = window.location.search;
+    const selected = new URLSearchParams(search).get("time")?.toLowerCase();
     if (FILTERS.some((item) => item.id === selected)) {
       setActive(selected as Filter);
     } else {
-      setActive("auto");
+      const current = lookAt(hourFor(search)).name.toLowerCase() as Filter;
+      if (FILTERS.some((item) => item.id === current)) setActive(current);
     }
   }, []);
 
@@ -30,7 +32,6 @@ export default function PondControls() {
     url.searchParams.set("time", filter);
     url.searchParams.delete("hour");
     window.history.replaceState({}, "", url);
-
     window.dispatchEvent(new CustomEvent("pond-time-change", { detail: filter }));
   };
 
