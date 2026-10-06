@@ -45,15 +45,8 @@ function AmbientToggle() {
   const { audible, toggle } = useAmbient();
 
   return (
-    <button
-      className="control-icon ambient-toggle"
-      data-audio-toggle
-      type="button"
-      onClick={toggle}
-      aria-label={audible ? "Mute music" : "Play music"}
-      title={audible ? "Mute music" : "Play music"}
-    >
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <button className="control-icon" type="button" onClick={toggle} aria-label={audible ? "Mute music" : "Play music"} title={audible ? "Mute music" : "Play music"}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M11 5 6 9H2v6h4l5 4V5Z" />
         {audible ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M19 5a10 10 0 0 1 0 14" /></> : <><path d="m22 9-6 6" /><path d="m16 9 6 6" /></>}
       </svg>
@@ -79,11 +72,11 @@ function ThemeToggle() {
   return (
     <button className="control-icon" type="button" onClick={toggle} aria-label="Toggle theme" title="Toggle theme">
       {dark ? (
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M20.5 14.3A8.6 8.6 0 1 1 9.7 3.5a6.9 6.9 0 0 0 10.8 10.8Z" />
         </svg>
       ) : (
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="4" />
           <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
         </svg>
@@ -129,16 +122,18 @@ function Todo() {
 
   return (
     <div className="todo-wrap">
-      <button className="control-icon" type="button" onClick={() => setOpen((value) => !value)} aria-label="Open todo list" aria-expanded={open} title="Todo list">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M5 6h14M5 12h14M5 18h9" />
-          <circle cx="18" cy="18" r="2.5" />
-        </svg>
+      <button className="todo-button" type="button" onClick={() => setOpen((value) => !value)} aria-label="Open todo list" aria-expanded={open} title="Todo list">
+        <span className="todo-button-checks" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
+        <span className="todo-button-label">todo</span>
       </button>
 
       {open && (
         <div className="todo-panel">
-          <div className="todo-title">little things</div>
+          <div className="todo-title">todo</div>
           <div className="todo-list">
             {tasks.length === 0 && <div className="todo-empty">nothing here yet</div>}
             {tasks.map((item, index) => (
