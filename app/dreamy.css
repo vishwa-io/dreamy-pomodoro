@@ -8,26 +8,24 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .hero-bar { position: absolute; top: 22px; left: 26px; right: 26px; display: flex; align-items: flex-start; justify-content: space-between; pointer-events: none; color: rgba(255,255,255,.82); text-shadow: 0 1px 14px rgba(0,0,0,.38); }
 .time-widget { padding-top: 2px; font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 400; line-height: 18px; letter-spacing: .025em; white-space: nowrap; }
 .time-widget-clock { font-variant-numeric: tabular-nums; }
-.hero-controls { display: flex; align-items: center; gap: 5px; pointer-events: auto; }
-.control-icon { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 1px solid rgba(255,255,255,.07); border-radius: 50%; background: rgba(8,12,24,.12); color: rgba(255,255,255,.76); cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease; backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
-.control-icon:hover, .control-icon:focus-visible { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.17); color: #fff; outline: none; }
+.hero-controls { display: flex; align-items: center; gap: 7px; pointer-events: auto; }
+
+.control-icon { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: rgba(255,255,255,.74); cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, transform .2s ease; }
+.control-icon:hover, .control-icon:focus-visible { background: rgba(255,255,255,.08); color: #fff; outline: none; }
 .control-icon:active { transform: scale(.92); }
 
-.todo-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; width: auto; min-width: 50px; height: 30px; padding: 0 8px; border: 1px solid rgba(255,255,255,.07); border-radius: 999px; background: rgba(8,12,24,.12); color: rgba(255,255,255,.78); font-family: var(--font-manrope), sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .04em; cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease; backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
-.todo-button:hover, .todo-button:focus-visible { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.17); color: #fff; outline: none; }
-.todo-button:active { transform: scale(.96); }
-.todo-button-checks { display: inline-flex; flex-direction: column; justify-content: space-between; width: 9px; height: 11px; padding: 1px 0; }
-.todo-button-checks span { display: block; width: 9px; height: 1px; border-radius: 99px; background: currentColor; opacity: .9; }
-.todo-button-label { line-height: 1; }
+.todo-button { display: inline-flex; align-items: center; justify-content: center; width: auto; height: 28px; padding: 0 2px; border: 0; border-radius: 0; background: transparent; color: rgba(255,255,255,.78); font-family: var(--font-manrope), sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .035em; line-height: 1; cursor: pointer; text-shadow: 0 1px 12px rgba(0,0,0,.35); }
+.todo-button:hover, .todo-button:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 4px; outline: none; }
+.todo-button:active { transform: translateY(1px); }
 
-.pomodoro { position: absolute; top: clamp(68px, 8.7vh, 92px); left: 50%; transform: translateX(-50%); width: min(340px, calc(100vw - 40px)); display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,.94); text-align: center; pointer-events: auto; text-shadow: 0 2px 22px rgba(0,0,0,.42); }
+.pomodoro { position: absolute; top: clamp(66px, 8.2vh, 84px); left: 50%; transform: translateX(-50%); width: min(340px, calc(100vw - 40px)); display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,.94); text-align: center; pointer-events: auto; text-shadow: 0 2px 22px rgba(0,0,0,.42); }
 .pomodoro-mode { display: flex; gap: 22px; margin-bottom: 3px; }
 .pomodoro-mode button { position: relative; padding: 2px 1px 5px; border: 0; background: none; color: rgba(255,255,255,.5); font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 500; line-height: 18px; letter-spacing: .035em; cursor: pointer; transition: color .2s ease; }
 .pomodoro-mode button::after { content: ""; position: absolute; right: 2px; bottom: 0; left: 2px; height: 1px; background: currentColor; opacity: 0; transform: scaleX(.45); transition: opacity .2s ease, transform .2s ease; }
 .pomodoro-mode button:hover, .pomodoro-mode button.active { color: #fff; }
 .pomodoro-mode button.active::after { opacity: .8; transform: scaleX(1); }
-.pomodoro-time { font-family: var(--font-manrope), sans-serif; font-size: clamp(50px, 5.5vw, 68px); line-height: .96; font-weight: 400; letter-spacing: -.055em; font-variant-numeric: tabular-nums; user-select: none; }
-.pomodoro-actions { display: flex; align-items: center; gap: 17px; margin-top: 9px; }
+.pomodoro-time { font-family: var(--font-manrope), sans-serif; font-size: clamp(48px, 5.2vw, 64px); line-height: .96; font-weight: 400; letter-spacing: -.055em; font-variant-numeric: tabular-nums; user-select: none; }
+.pomodoro-actions { display: flex; align-items: center; gap: 17px; margin-top: 8px; }
 .pomodoro-main, .pomodoro-reset { border: 0; font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 500; line-height: 19px; cursor: pointer; transition: color .2s ease, transform .2s ease; }
 .pomodoro-main { padding: 1px 7px 3px; border-bottom: 1px solid rgba(255,255,255,.55); background: none; color: rgba(255,255,255,.92); }
 .pomodoro-reset { padding: 2px 0; background: none; color: rgba(255,255,255,.5); }
@@ -35,13 +33,12 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .pomodoro-main:active, .pomodoro-reset:active { transform: translateY(1px); }
 
 .todo-wrap { position: relative; }
-.todo-panel { position: absolute; top: 39px; right: 0; width: min(255px, calc(100vw - 34px)); padding: 16px 17px 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 14px; background: rgba(12,16,26,.58); color: rgba(255,255,255,.9); box-shadow: 0 18px 55px rgba(0,0,0,.2); backdrop-filter: blur(22px) saturate(120%); -webkit-backdrop-filter: blur(22px) saturate(120%); text-shadow: none; }
-.todo-title { margin-bottom: 11px; color: rgba(255,255,255,.78); font-family: var(--font-manrope), sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: lowercase; }
-.todo-list { display: flex; flex-direction: column; gap: 9px; }
+.todo-panel { position: absolute; top: 34px; right: 0; width: min(245px, calc(100vw - 34px)); padding: 15px 16px 14px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(10,15,25,.56); color: rgba(255,255,255,.9); box-shadow: 0 18px 50px rgba(0,0,0,.22); backdrop-filter: blur(20px) saturate(115%); -webkit-backdrop-filter: blur(20px) saturate(115%); text-shadow: none; }
+.todo-title { margin-bottom: 10px; color: rgba(255,255,255,.78); font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .055em; }
+.todo-list { display: flex; flex-direction: column; gap: 8px; }
 .todo-empty { padding: 2px 0 6px; color: rgba(255,255,255,.4); font-family: var(--font-manrope), sans-serif; font-size: 11px; }
 .todo-row { display: flex; align-items: center; gap: 9px; min-width: 0; }
-.todo-check { flex: 0 0 auto; width: 13px; height: 13px; padding: 0; border: 1px solid rgba(255,255,255,.48); border-radius: 4px; background: transparent; cursor: pointer; transition: background .18s ease, border-color .18s ease; }
-.todo-check:hover { border-color: rgba(255,255,255,.82); }
+.todo-check { flex: 0 0 auto; width: 13px; height: 13px; padding: 0; border: 1px solid rgba(255,255,255,.48); border-radius: 4px; background: transparent; cursor: pointer; }
 .todo-check.done { border-color: rgba(255,255,255,.85); background: rgba(255,255,255,.85); }
 .todo-text { min-width: 0; flex: 1; overflow: hidden; color: rgba(255,255,255,.82); font-family: var(--font-manrope), sans-serif; font-size: 11px; line-height: 17px; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .todo-text.done { color: rgba(255,255,255,.35); text-decoration: line-through; }
@@ -54,8 +51,8 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 
 @media (max-width: 600px) {
   .hero-bar { top: 15px; left: 16px; right: 16px; }
-  .control-icon { width: 29px; height: 29px; }
-  .todo-button { min-width: 48px; height: 29px; padding: 0 7px; font-size: 10px; }
-  .pomodoro { top: 68px; }
-  .pomodoro-time { font-size: clamp(46px, 13vw, 58px); }
+  .control-icon { width: 27px; height: 27px; }
+  .todo-button { height: 27px; font-size: 10px; }
+  .pomodoro { top: 66px; }
+  .pomodoro-time { font-size: clamp(44px, 13vw, 56px); }
 }
