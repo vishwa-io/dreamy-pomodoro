@@ -1,18 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+const FORMAT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Asia/Kolkata",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true,
+});
+
+const clock = () =>
+  FORMAT.format(new Date()).replace(/\s?(AM|PM)/i, (_, ap: string) => ap.toLowerCase());
+
 export default function SocialNav() {
+  const [now, setNow] = useState("");
+
+  useEffect(() => {
+    setNow(clock());
+    const id = window.setInterval(() => setNow(clock()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
   return (
     <nav className="social-nav" aria-label="Social links">
-      <a
-        className="social-brand"
-        href="https://github.com/vishwa-io"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Vishwa on GitHub"
-        title="Vishwa on GitHub"
-      >
-        Vishwa
-      </a>
+      <div className="social-identity">
+        <a
+          className="social-brand"
+          href="https://github.com/vishwa-io"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Vishwa on GitHub"
+          title="Vishwa on GitHub"
+        >
+          Vishwa
+        </a>
+        <span className="social-time" aria-label="Current time">
+          {now || "00:00am"}
+        </span>
+      </div>
 
       <div className="social-links">
         <a className="social-link" href="https://github.com/vishwa-io" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
