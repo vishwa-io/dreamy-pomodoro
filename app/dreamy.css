@@ -5,22 +5,23 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .dreamy-pomodoro > .pond-hero canvas { width: 100%; height: 100%; }
 .dreamy-overlay { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
 
-.hero-bar { position: absolute; top: 22px; left: 26px; right: 26px; display: flex; align-items: flex-start; justify-content: space-between; pointer-events: none; color: rgba(255,255,255,.8); text-shadow: 0 1px 14px rgba(0,0,0,.38); }
+.hero-bar { position: absolute; top: 22px; left: 26px; right: 26px; display: flex; align-items: flex-start; justify-content: space-between; pointer-events: none; color: rgba(255,255,255,.82); text-shadow: 0 1px 14px rgba(0,0,0,.38); }
 .time-widget { padding-top: 2px; font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 400; line-height: 18px; letter-spacing: .025em; white-space: nowrap; }
 .time-widget-clock { font-variant-numeric: tabular-nums; }
-.hero-controls { display: flex; align-items: center; gap: 3px; pointer-events: auto; }
-.control-icon { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: rgba(255,255,255,.72); cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, transform .2s ease; }
-.control-icon:hover, .control-icon:focus-visible { background: rgba(255,255,255,.1); color: #fff; outline: none; }
+.hero-controls { display: flex; align-items: center; gap: 5px; pointer-events: auto; }
+.control-icon { display: grid; place-items: center; width: 31px; height: 31px; padding: 0; border: 1px solid rgba(255,255,255,.08); border-radius: 50%; background: rgba(8,12,24,.16); color: rgba(255,255,255,.78); cursor: pointer; text-shadow: none; transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.control-icon:hover, .control-icon:focus-visible { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.18); color: #fff; outline: none; }
 .control-icon:active { transform: scale(.92); }
 
-.pomodoro { position: absolute; top: clamp(66px, 8.5vh, 88px); left: 50%; transform: translateX(-50%); width: min(360px, calc(100vw - 40px)); display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,.94); text-align: center; pointer-events: auto; text-shadow: 0 2px 24px rgba(0,0,0,.42); }
-.pomodoro-mode { display: flex; gap: 22px; margin-bottom: 4px; }
+/* The timer is intentionally restrained so the pond remains the visual hero. */
+.pomodoro { position: absolute; top: clamp(70px, 9.5vh, 102px); left: 50%; transform: translateX(-50%); width: min(360px, calc(100vw - 40px)); display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,.94); text-align: center; pointer-events: auto; text-shadow: 0 2px 24px rgba(0,0,0,.42); }
+.pomodoro-mode { display: flex; gap: 22px; margin-bottom: 3px; }
 .pomodoro-mode button { position: relative; padding: 2px 1px 5px; border: 0; background: none; color: rgba(255,255,255,.5); font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 500; line-height: 18px; letter-spacing: .035em; cursor: pointer; transition: color .2s ease; }
 .pomodoro-mode button::after { content: ""; position: absolute; right: 2px; bottom: 0; left: 2px; height: 1px; background: currentColor; opacity: 0; transform: scaleX(.45); transition: opacity .2s ease, transform .2s ease; }
 .pomodoro-mode button:hover, .pomodoro-mode button.active { color: #fff; }
 .pomodoro-mode button.active::after { opacity: .8; transform: scaleX(1); }
-.pomodoro-time { font-family: var(--font-manrope), sans-serif; font-size: clamp(64px, 7.4vw, 88px); line-height: .94; font-weight: 400; letter-spacing: -.055em; font-variant-numeric: tabular-nums; user-select: none; }
-.pomodoro-actions { display: flex; align-items: center; gap: 17px; margin-top: 9px; }
+.pomodoro-time { font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(52px, 5.7vw, 70px); line-height: .92; font-weight: 400; letter-spacing: -.025em; font-variant-numeric: tabular-nums; user-select: none; }
+.pomodoro-actions { display: flex; align-items: center; gap: 17px; margin-top: 10px; }
 .pomodoro-main, .pomodoro-reset { border: 0; font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 500; line-height: 19px; cursor: pointer; transition: color .2s ease, transform .2s ease; }
 .pomodoro-main { padding: 1px 7px 3px; border-bottom: 1px solid rgba(255,255,255,.55); background: none; color: rgba(255,255,255,.92); }
 .pomodoro-reset { padding: 2px 0; background: none; color: rgba(255,255,255,.5); }
@@ -28,8 +29,8 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .pomodoro-main:active, .pomodoro-reset:active { transform: translateY(1px); }
 
 .todo-wrap { position: relative; }
-.todo-panel { position: absolute; top: 37px; right: 0; width: min(255px, calc(100vw - 34px)); padding: 16px 17px 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 14px; background: rgba(12,16,26,.58); color: rgba(255,255,255,.9); box-shadow: 0 18px 55px rgba(0,0,0,.2); backdrop-filter: blur(22px) saturate(120%); -webkit-backdrop-filter: blur(22px) saturate(120%); text-shadow: none; }
-.todo-title { margin-bottom: 11px; color: rgba(255,255,255,.72); font-family: var(--font-manrope), sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .055em; }
+.todo-panel { position: absolute; top: 39px; right: 0; width: min(255px, calc(100vw - 34px)); padding: 16px 17px 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 14px; background: rgba(12,16,26,.58); color: rgba(255,255,255,.9); box-shadow: 0 18px 55px rgba(0,0,0,.2); backdrop-filter: blur(22px) saturate(120%); -webkit-backdrop-filter: blur(22px) saturate(120%); text-shadow: none; }
+.todo-title { margin-bottom: 11px; color: rgba(255,255,255,.78); font-family: var(--font-cormorant), Georgia, serif; font-size: 17px; font-weight: 500; letter-spacing: .04em; }
 .todo-list { display: flex; flex-direction: column; gap: 9px; }
 .todo-empty { padding: 2px 0 6px; color: rgba(255,255,255,.4); font-family: var(--font-manrope), sans-serif; font-size: 11px; }
 .todo-row { display: flex; align-items: center; gap: 9px; min-width: 0; }
@@ -49,5 +50,5 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
   .hero-bar { top: 15px; left: 16px; right: 16px; }
   .control-icon { width: 29px; height: 29px; }
   .pomodoro { top: 68px; }
-  .pomodoro-time { font-size: clamp(56px, 16vw, 74px); }
+  .pomodoro-time { font-size: clamp(48px, 14vw, 62px); }
 }
