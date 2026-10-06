@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Manrope, Cormorant_Garamond, Noto_Sans_Devanagari, Noto_Naskh_Arabic, Gaegu } from "next/font/google";
+import { Inter, Manrope, Caveat, Noto_Sans_Devanagari, Noto_Naskh_Arabic, Gaegu } from "next/font/google";
 import "./globals.css";
 import "./dreamy.css";
 import AudioProvider from "./audio-provider";
@@ -18,11 +18,11 @@ const manrope = Manrope({
   variable: "--font-manrope",
 });
 
-const cormorant = Cormorant_Garamond({
+const caveat = Caveat({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-cormorant",
+  variable: "--font-caveat",
 });
 
 const devanagari = Noto_Sans_Devanagari({
@@ -78,7 +78,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${manrope.variable} ${cormorant.variable} ${devanagari.variable} ${arabic.variable} ${hand.variable}`}
+      className={`${inter.variable} ${manrope.variable} ${caveat.variable} ${devanagari.variable} ${arabic.variable} ${hand.variable}`}
       suppressHydrationWarning
     >
       <head>
