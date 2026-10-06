@@ -27,7 +27,6 @@ import { makeLook, paintSwan } from "./swan-paint";
 const MAX_RIPPLES = 20;
 const DESIGN_WIDTH = 680;
 const SWAN_COUNT = 3;
-const KOI_COUNT = 3;
 const LEAF_COUNT = 5;
 /** One look per time of day; the pond blends between them by the clock. */
 export const TIMES = [
@@ -598,7 +597,8 @@ void main() {
 
   // Monet's palette: violet-blue in the shadows, a warm breath in the lights
   float l = dot(col, vec3(0.299, 0.587, 0.114));
-  col += vec3(0.05, 0.025, 0.09) * (1.0 - l) * uPaint;  col *= mix(vec3(1.0), vec3(1.045, 1.0, 0.94), smoothstep(0.45, 1.0, l) * uPaint);
+  col += vec3(0.05, 0.025, 0.09) * (1.0 - l) * uPaint;
+  col *= mix(vec3(1.0), vec3(1.045, 1.0, 0.94), smoothstep(0.45, 1.0, l) * uPaint);
 
   // canvas weave and grain
   vec2 q = p / uScale;
@@ -1197,7 +1197,8 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
         for (let i = kernels.length - 1; i >= 0; i--) {
             const k = kernels[i];
             if (k.delay > 0) {
-                k.delay -= dt;                continue;
+                k.delay -= dt;
+                continue;
             }
             k.age += dt;
             if (!k.landed) {
@@ -1448,12 +1449,6 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
             s.ty *= sy;
             s.trail.length = 0;
         }
-        for (const k of koi) {
-            k.x *= sx;
-            k.y *= sy;
-            k.tx *= sx;
-            k.ty *= sy;
-        }
         for (const r of ripples) {
             r.x *= sx;
             r.y *= sy;
@@ -1580,245 +1575,6 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
         swans.push(makeSwan(i));
     for (const s of swans)
         pickWaypoint(s);
-
-    /* ---------- koi ---------- */
-    // Exactly three slow, painterly koi share the pond's painted surface canvas.
-    // Because they pass through the existing water + brush shaders, they inherit
-    // the same impressionistic softness, reflections, bloom and time-of-day tint.
-    const koi = [];
-    const koiPalettes = [
-        { base: "#c88f67", light: "#efd9b7", patch: "#aa5c43", dark: "#4f3c39" },
-        { base: "#aaa08f", light: "#d9d0bd", patch: "#b86b49", dark: "#49464a" },
-        { base: "#8f8785", light: "#cfc4b7", patch: "#9d6250", dark: "#403f4b" },
-    ];
-
-    const koiSpeed = (k) => (0.105 + k.pace * 0.018) * L * motion;
-    const koiBounds = () => inner(0.9 * L);
-
-    const pickKoiWaypoint = (k) => {
-        const b = koiBounds();
-        let best = { x: W * 0.5, y: H * 0.5 };
-        let bestScore = -Infinity;
-        for (let i = 0; i < 7; i++) {
-            const x = rand(b.x0, b.x1);
-            const y = rand(b.y0, b.y1);
-            let score = Math.hypot(x - k.x, y - k.y);
-            for (const s of swans) {
-                if (s.state === "away")
-                    continue;
-                score += Math.min(Math.hypot(x - s.x, y - s.y), 3.6 * L) * 0.22;
-            }
-            for (const o of koi) {
-                if (o === k)
-                    continue;
-                score += Math.min(Math.hypot(x - o.x, y - o.y), 2.5 * L) * 0.08;
-            }
-            if (score > bestScore) {
-                best = { x, y };
-                bestScore = score;
-            }
-        }
-        k.tx = best.x;
-        k.ty = best.y;
-        k.targetTimer = rand(8, 15);
-    };
-
-    const makeKoi = (i) => {
-        const starts = [
-            [0.28, 0.72],
-            [0.57, 0.46],
-            [0.77, 0.67],
-        ];
-        const [sx, sy] = starts[i % starts.length];
-        const k = {
-            x: sx * W,
-            y: sy * H,
-            tx: sx * W,
-            ty: sy * H,
-            h: rand(-Math.PI, Math.PI),
-            w: 0,
-            v: 0,
-            size: [0.82, 0.7, 0.76][i % 3],
-            pace: [0.78, 0.95, 0.86][i % 3],
-            turnMul: [0.7, 0.82, 0.76][i % 3],
-            targetTimer: 0,
-            phase: rand(0, Math.PI * 2),
-            tail: rand(0, Math.PI * 2),
-            fin: rand(0, Math.PI * 2),
-            palette: koiPalettes[i % koiPalettes.length],
-            alpha: [0.76, 0.7, 0.73][i % 3],
-            patchTilt: rand(-0.25, 0.25),
-            patchShift: rand(-0.15, 0.18),
-        };
-        k.v = koiSpeed(k);
-        return k;
-    };
-
-    for (let i = 0; i < KOI_COUNT; i++)
-        koi.push(makeKoi(i));
-    for (const k of koi)
-        pickKoiWaypoint(k);
-
-    const updateKoi = (k, dt) => {
-        const b = koiBounds();
-        k.targetTimer -= dt;
-
-        const dx = k.tx - k.x;
-        const dy = k.ty - k.y;
-        const dl = Math.hypot(dx, dy) || 1;
-        let wantX = dx / dl;
-        let wantY = dy / dl;
-
-        if (dl < 1.4 * L * k.size || k.targetTimer <= 0)
-            pickKoiWaypoint(k);
-
-        const dirX = Math.cos(k.h);
-        const dirY = Math.sin(k.h);
-
-        // Give the fish a little personal space around the swans.
-        for (const s of swans) {
-            if (s.state === "away")
-                continue;
-            const rx = s.x - k.x;
-            const ry = s.y - k.y;
-            const d = Math.hypot(rx, ry);
-            const R = 1.15 * L * (k.size + s.size) * 0.5;
-            if (d > 0.001 && d < R) {
-                const f = (1 - d / R) * 1.5;
-                wantX -= (rx / d) * f;
-                wantY -= (ry / d) * f;
-            }
-        }
-
-        // Cursor ripples make them drift gently away instead of piling under it.
-        if (pointer) {
-            const rx = k.x - pointer.x;
-            const ry = k.y - pointer.y;
-            const d = Math.hypot(rx, ry);
-            const R = 1.35 * L;
-            if (d > 0.001 && d < R) {
-                const f = (1 - d / R) * 0.8;
-                wantX += (rx / d) * f;
-                wantY += (ry / d) * f;
-            }
-        }
-
-        const margin = 0.95 * L;
-        if (k.x < b.x0 + margin || k.x > b.x1 - margin || k.y < b.y0 + margin || k.y > b.y1 - margin) {
-            const cx = W * 0.5 - k.x;
-            const cy = H * 0.5 - k.y;
-            const cl = Math.hypot(cx, cy) || 1;
-            wantX += (cx / cl) * 0.9;
-            wantY += (cy / cl) * 0.9;
-        }
-
-        const desired = Math.atan2(wantY, wantX);
-        const diff = wrapAngle(desired - k.h);
-        const maxTurn = 0.24 * k.turnMul;
-        k.w += clamp(diff * 0.7 - k.w, -maxTurn * dt * 2.5, maxTurn * dt * 2.5);
-        k.h = wrapAngle(k.h + k.w * dt);
-
-        const vTarget = koiSpeed(k);
-        k.v += (vTarget - k.v) * (1 - Math.exp(-dt * 0.9));
-        k.x += Math.cos(k.h) * k.v * dt;
-        k.y += Math.sin(k.h) * k.v * dt;
-
-        k.tail += dt * (2.8 + k.v / Math.max(L, 1) * 5.2);
-        k.fin += dt * 2.2;
-        k.phase += dt * 0.7;
-    };
-
-    const koiBlob = (c, x, y, rx, ry, color, alpha = 1, rotation = 0) => {
-        c.save();
-        c.translate(x, y);
-        c.rotate(rotation);
-        c.globalAlpha = alpha;
-        c.fillStyle = color;
-        c.beginPath();
-        c.moveTo(-rx, 0);
-        c.bezierCurveTo(-rx * 0.5, -ry, rx * 0.48, -ry * 1.05, rx, 0);
-        c.bezierCurveTo(rx * 0.48, ry * 1.05, -rx * 0.5, ry, -rx, 0);
-        c.closePath();
-        c.fill();
-        c.restore();
-    };
-
-    const drawKoi = (c, k) => {
-        const sz = L * k.size;
-        const bob = Math.sin(k.phase * 1.7) * 0.65 * scale;
-        const rot = k.h + Math.sin(k.phase) * 0.035;
-        const sway = Math.sin(k.tail) * 0.08;
-
-        c.save();
-        c.translate(k.x, k.y + bob);
-        c.rotate(rot);
-        c.globalAlpha = k.alpha;
-
-        // Soft underwater shadow.
-        c.globalAlpha = k.alpha * 0.15;
-        c.fillStyle = "#11192b";
-        c.beginPath();
-        c.ellipse(-sz * 0.02, sz * 0.19, sz * 0.68, sz * 0.17, 0, 0, Math.PI * 2);
-        c.fill();
-
-        // Tail, then the rounded body.
-        c.globalAlpha = k.alpha * 0.78;
-        c.fillStyle = k.palette.base;
-        c.beginPath();
-        c.moveTo(-sz * 0.48, 0);
-        c.quadraticCurveTo(-sz * 0.86, -sz * (0.25 + sway), -sz * 0.98, -sz * 0.07);
-        c.quadraticCurveTo(-sz * 0.82, 0, -sz * 0.98, sz * 0.07);
-        c.quadraticCurveTo(-sz * 0.86, sz * (0.25 + sway), -sz * 0.48, 0);
-        c.closePath();
-        c.fill();
-
-        c.globalAlpha = k.alpha;
-        c.fillStyle = k.palette.base;
-        c.beginPath();
-        c.ellipse(sz * 0.04, 0, sz * 0.62, sz * 0.29, 0, 0, Math.PI * 2);
-        c.fill();
-
-        // Soft highlights and restrained vermilion patches.
-        koiBlob(c, -sz * 0.18, -sz * 0.02, sz * 0.35, sz * 0.19, k.palette.light, 0.52, -0.05);
-        koiBlob(c, sz * (0.18 + k.patchShift), -sz * 0.08, sz * 0.18, sz * 0.115, k.palette.patch, 0.74, k.patchTilt);
-        koiBlob(c, sz * (-0.3 - k.patchShift * 0.5), sz * 0.035, sz * 0.15, sz * 0.105, k.palette.patch, 0.56, -k.patchTilt * 1.5);
-
-        c.globalAlpha = k.alpha * 0.38;
-        c.fillStyle = k.palette.dark;
-        c.beginPath();
-        c.ellipse(sz * 0.07, -sz * 0.255, sz * 0.23, sz * 0.065, -0.08, 0, Math.PI * 2);
-        c.fill();
-        c.fillStyle = k.palette.light;
-        c.beginPath();
-        c.ellipse(sz * 0.07, sz * 0.25, sz * 0.23, sz * 0.065, 0.08, 0, Math.PI * 2);
-        c.fill();
-
-        // Tiny brush dabs suggest scales without becoming a cartoon fish.
-        c.globalAlpha = k.alpha * 0.24;
-        c.fillStyle = k.palette.light;
-        for (let i = 0; i < 8; i++) {
-            const u = -0.35 + i * 0.09;
-            const yy = Math.sin(i * 1.7 + k.phase) * 0.065;
-            c.beginPath();
-            c.ellipse(sz * u, sz * yy, sz * 0.034, sz * 0.021, 0, 0, Math.PI * 2);
-            c.fill();
-        }
-
-        // Eye and mouth, kept deliberately tiny.
-        c.globalAlpha = k.alpha * 0.9;
-        c.fillStyle = "#292832";
-        c.beginPath();
-        c.arc(sz * 0.55, -sz * 0.07, Math.max(0.85, sz * 0.025), 0, Math.PI * 2);
-        c.fill();
-
-        c.fillStyle = "#b76d57";
-        c.beginPath();
-        c.ellipse(sz * 0.66, 0, sz * 0.043, sz * 0.026, 0, 0, Math.PI * 2);
-        c.fill();
-
-        c.restore();
-    };
-
     const nearestOther = (s) => {
         let d = Infinity;
         for (const o of swans)
@@ -2041,7 +1797,8 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
         // the nearest one calls dibs, and another has an opinion about that
         // ...but not every time: at least three handfuls go by before it happens again
         feedsSinceDibs++;
-        if (feedsSinceDibs > 3) {            const near = swans
+        if (feedsSinceDibs > 3) {
+            const near = swans
                 .filter((s) => s.state !== "away" && s.state !== "flee" && s.fleeAt < 0 && s.x > 0 && s.x < W && s.y > 0 && s.y < H)
                 .sort((a, b) => Math.hypot(a.x - px, a.y - py) - Math.hypot(b.x - px, b.y - py));
             if (near.length) {
@@ -2640,7 +2397,8 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
         });
         target.restore();
     };
-    // wakes go into a height map that the shader reads as surface slope    const drawWakes = () => {
+    // wakes go into a height map that the shader reads as surface slope
+    const drawWakes = () => {
         const k = surf.width / W;
         sctx.setTransform(k, 0, 0, k, 0, 0);
         sctx.globalCompositeOperation = "source-over";
@@ -2839,8 +2597,6 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
             const next = away.reduce((a, b) => (a.awayUntil < b.awayUntil ? a : b));
             next.awayUntil = Math.min(next.awayUntil, clock + 0.25);
         }
-        for (const k of koi)
-            updateKoi(k, dt * motion);
         for (const s of swans)
             update(s, dt * motion);
         resolveOverlaps(dt * motion);
@@ -2862,8 +2618,6 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
         for (const k of kernels)
             if (k.landed)
                 drawKernel(pctx, k);
-        for (const k of koi)
-            drawKoi(pctx, k);
         const live = swans.filter((s) => s.state !== "away").sort((a, b) => a.y - b.y);
         for (const s of live)
             drawSwan(pctx, s);
