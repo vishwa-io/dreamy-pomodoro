@@ -146,8 +146,8 @@ html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
 .todo-add input::placeholder { color: rgba(255,255,255,.38); }
 .todo-add button { border: 0; padding: 0 3px; background: none; color: rgba(255,255,255,.72); font-family: var(--font-delius), cursive; font-size: 18px; cursor: pointer; }
 
-/* Light mode: preserve the pond, flip only the surrounding chrome and overlay ink. */
-html[data-theme="light"] .dreamy-pomodoro { background: #fff; }
+/* Light mode: use a warm off-white surround instead of pure white; the pond itself remains unchanged. */
+html[data-theme="light"] .dreamy-pomodoro { background: #f4f0e8; }
 html[data-theme="light"] .social-nav { text-shadow: 0 1px 14px rgba(255,255,255,.35); }
 html[data-theme="light"] .social-brand,
 html[data-theme="light"] .social-time,
