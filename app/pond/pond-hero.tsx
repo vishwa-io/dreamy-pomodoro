@@ -4,21 +4,6 @@ import { useEffect, useRef } from "react";
 import { startPond } from "./engine";
 import { hourFor, lookAt } from "./time-of-day";
 
-/**
- * The swan pond, as a hero.
- *
- * `startPond` (lifted from the standalone artifact) owns everything inside the
- * frame: the painted pond floor, weeds, overhanging vines and blossom, drifting
- * leaves, three painted swans, the ripple and wake simulation, and the water and
- * brushwork shaders. It pauses while off-screen or in a hidden tab, and steps
- * its own render resolution down if frames start taking too long.
- *
- * This component only gives it a frame to live in and keeps its look in step
- * with the clock: dawn, day, dusk, dark.
- *
- * The canvases are created inside the effect so that React strict mode's double
- * mount gets fresh WebGL contexts rather than a lost one.
- */
 export default function PondHero() {
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -32,28 +17,28 @@ export default function PondHero() {
     swans.className = "pond-swans";
     host.append(water, swans);
 
-    // The visitor's own clock, read in their browser: a viewer in Mumbai at 7pm
-    // gets dusk while one in Los Angeles at the same instant gets their morning.
     const hourNow = () => hourFor(window.location.search);
     const first = lookAt(hourNow());
-    host.dataset.time = first.name; // which look is showing (also handy for debugging)
+    host.dataset.time = first.name;
     const ctl = startPond(host, water, swans, first.params);
 
-    // The look drifts with the light, so a coarse refresh is invisible: the
-    // engine eases toward each new target rather than jumping to it.
-    const clock = window.setInterval(() => {
+    const applyLook = () => {
       const now = lookAt(hourNow());
       host.dataset.time = now.name;
       ctl.setParams(now.params);
-    }, 30_000);
+    };
+
+    const clock = window.setInterval(applyLook, 30_000);
+    const onPondTimeChange = () => applyLook();
+
+    window.addEventListener("pond-time-change", onPondTimeChange);
 
     return () => {
       window.clearInterval(clock);
+      window.removeEventListener("pond-time-change", onPondTimeChange);
       ctl.destroy();
       water.remove();
       swans.remove();
-      // The engine feathers the frame's edge with a generated mask; clear it so a
-      // remount starts from the stylesheet again.
       for (const prop of ["-webkit-mask-image", "mask-image", "-webkit-mask-size", "mask-size", "-webkit-mask-repeat", "mask-repeat", "-webkit-mask-composite", "mask-composite", "border-radius", "cursor"]) {
         host.style.removeProperty(prop);
       }
