@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { startPond } from "./engine";
 import { hourFor, lookAt } from "./time-of-day";
+import { mountKoiLayer } from "./koi-layer";
 
 export default function PondHero() {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -13,9 +14,18 @@ export default function PondHero() {
 
     const water = document.createElement("canvas");
     water.className = "pond-water";
+
+    const koi = document.createElement("canvas");
+    koi.className = "pond-koi";
+
     const swans = document.createElement("canvas");
     swans.className = "pond-swans";
-    host.append(water, swans);
+
+    // Water first, then koi, then swans so the fish sit inside the pond
+    // without covering the existing swan layer.
+    host.append(water, koi, swans);
+
+    const stopKoi = mountKoiLayer(host, koi);
 
     const hourNow = () => hourFor(window.location.search);
     const first = lookAt(hourNow());
@@ -36,8 +46,10 @@ export default function PondHero() {
     return () => {
       window.clearInterval(clock);
       window.removeEventListener("pond-time-change", onPondTimeChange);
+      stopKoi();
       ctl.destroy();
       water.remove();
+      koi.remove();
       swans.remove();
       for (const prop of ["-webkit-mask-image", "mask-image", "-webkit-mask-size", "mask-size", "-webkit-mask-repeat", "mask-repeat", "-webkit-mask-composite", "mask-composite", "border-radius", "cursor"]) {
         host.style.removeProperty(prop);
@@ -50,7 +62,7 @@ export default function PondHero() {
       className="pond-hero appear"
       ref={hostRef}
       role="img"
-      aria-label="A pond with swans gliding across it. Move over the water to ripple it; click to startle the swans, or take corn from the hanging feeder and throw it in."
+      aria-label="A dreamy pond with three koi and swans gliding across it. Move over the water to ripple it; click to startle the swans, or take corn from the hanging feeder and throw it in."
     />
   );
 }
