@@ -46,23 +46,15 @@ export default function SocialNav() {
           </svg>
         </a>
 
-        <a className="social-link" href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn">
+        <a className="social-link" href="https://www.linkedin.com/in/vishwa-patel-0598a2388/" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M5.1 3.4A2.1 2.1 0 1 1 5.1 7.6 2.1 2.1 0 0 1 5.1 3.4ZM3.3 9h3.6v11.2H3.3V9Zm5.8 0h3.4v1.53h.05c.47-.89 1.62-1.83 3.35-1.83 3.58 0 4.24 2.36 4.24 5.43v6.07h-3.55v-5.38c0-1.28-.02-2.92-1.78-2.92-1.78 0-2.05 1.39-2.05 2.83v5.47H9.1V9Z"/>
           </svg>
         </a>
 
-        <a className="social-link" href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X" title="X">
+        <a className="social-link" href="https://x.com/vi_shwaaa" target="_blank" rel="noreferrer" aria-label="X" title="X">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.26l-4.9-6.41L6.44 22H3.33l7.24-8.28L2.9 2h6.42l4.43 5.86L18.9 2Zm-1.1 17.9h1.73L8.7 4.02H6.84L17.8 19.9Z"/>
-          </svg>
-        </a>
-
-        <a className="social-link" href="https://vishwa-io.github.io/portfolio/" target="_blank" rel="noreferrer" aria-label="Portfolio" title="Portfolio">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M10 14 8.5 15.5a3.2 3.2 0 0 1-4.5-4.5L7 8a3.2 3.2 0 0 1 4.5 0"/>
-            <path d="m14 10 1.5-1.5A3.2 3.2 0 0 1 20 13l-3 3a3.2 3.2 0 0 1-4.5 0"/>
-            <path d="m8.5 12.5 7-7"/>
           </svg>
         </a>
       </div>
