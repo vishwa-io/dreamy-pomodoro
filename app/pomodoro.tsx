@@ -19,17 +19,13 @@ export default function Pomodoro() {
       setSeconds((current) => {
         if (current > 1) return current - 1;
         setRunning(false);
+        setMode((currentMode) => (currentMode === "focus" ? "break" : "focus"));
         return mode === "focus" ? BREAK_SECONDS : FOCUS_SECONDS;
-      });
-
-      setMode((current) => {
-        if (seconds !== 1) return current;
-        return current === "focus" ? "break" : "focus";
       });
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [running, mode, seconds]);
+  }, [running, mode]);
 
   useEffect(() => {
     document.title = `${formatTime(seconds)} · ${mode}`;
