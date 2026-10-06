@@ -2,9 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari, Noto_Naskh_Arabic, Gaegu } from "next/font/google";
 import "./globals.css";
 import "./dreamy.css";
-import SiteBehaviour from "./site-behaviour";
-import Dock from "./dock";
-import ThemeToggle from "./theme-toggle";
 import AudioProvider from "./audio-provider";
 
 const inter = Inter({
@@ -74,12 +71,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body>
-        <AudioProvider>
-          <ThemeToggle />
-          {children}
-          <Dock />
-          <SiteBehaviour />
-        </AudioProvider>
+        <AudioProvider>{children}</AudioProvider>
       </body>
     </html>
   );
