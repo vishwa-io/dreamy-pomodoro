@@ -11,7 +11,6 @@ export default function Pomodoro() {
   const [mode, setMode] = useState<Mode>("focus");
   const [seconds, setSeconds] = useState(FOCUS_SECONDS);
   const [running, setRunning] = useState(false);
-  const [sessions, setSessions] = useState(0);
 
   useEffect(() => {
     if (!running) return;
@@ -19,24 +18,21 @@ export default function Pomodoro() {
     const timer = window.setInterval(() => {
       setSeconds((current) => {
         if (current > 1) return current - 1;
-
         setRunning(false);
-        if (mode === "focus") {
-          setSessions((count) => count + 1);
-          setMode("break");
-          return BREAK_SECONDS;
-        }
+        return mode === "focus" ? BREAK_SECONDS : FOCUS_SECONDS;
+      });
 
-        setMode("focus");
-        return FOCUS_SECONDS;
+      setMode((current) => {
+        if (seconds !== 1) return current;
+        return current === "focus" ? "break" : "focus";
       });
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [running, mode]);
+  }, [running, mode, seconds]);
 
   useEffect(() => {
-    document.title = `${formatTime(seconds)} · ${mode === "focus" ? "Focus" : "Break"}`;
+    document.title = `${formatTime(seconds)} · ${mode}`;
     return () => {
       document.title = "Dreamy Pomodoro";
     };
@@ -87,10 +83,6 @@ export default function Pomodoro() {
         <button className="pomodoro-reset" onClick={reset} aria-label="Reset timer">
           reset
         </button>
-      </div>
-
-      <div className="pomodoro-sessions">
-        {sessions > 0 ? `${sessions} focus ${sessions === 1 ? "session" : "sessions"}` : "ready when you are"}
       </div>
     </section>
   );
