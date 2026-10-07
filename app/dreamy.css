@@ -877,6 +877,7 @@ html[data-theme="light"] .about-card {
 
 
 
+
 .stats-shell {
   position: fixed;
   inset: 0;
@@ -953,17 +954,24 @@ html[data-theme="light"] .about-card {
 }
 .stats-calendar-stage {
   width: max-content;
-  min-width: 100%;
+  min-width: max-content;
 }
 .stats-months {
-  position: relative;
-  width: 100%;
-  min-width: 938px;
+  display: grid;
+  grid-template-columns: 28px repeat(53, 13px);
+  column-gap: 4px;
+  width: max-content;
   height: 18px;
+  align-items: start;
+}
+.stats-month-spacer {
+  width: 28px;
+  height: 1px;
 }
 .stats-month {
-  position: absolute;
-  top: 0;
+  width: 13px;
+  height: 15px;
+  overflow: visible;
   color: rgba(255,255,255,.42);
   font-family: var(--font-manrope), sans-serif;
   font-size: 8px;
@@ -1065,8 +1073,7 @@ html[data-theme="light"] .stats-calendar-scroll::-webkit-scrollbar-thumb { backg
   .stats-topline h1 { font-size: clamp(28px, 8.5vw, 42px); }
   .stats-calendar-scroll {
     margin-top: 25px;
-    margin-left: 0;
     width: 100%;
   }
-  .stats-calendar-stage { min-width: 938px; }
+  .stats-calendar-stage { min-width: max-content; }
 }
