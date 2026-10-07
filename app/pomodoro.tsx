@@ -24,6 +24,7 @@ function recordFocusCompletion() {
     const saved = JSON.parse(localStorage.getItem(STATS_KEY) || "{}") as Counts;
     saved[day] = (saved[day] || 0) + 1;
     localStorage.setItem(STATS_KEY, JSON.stringify(saved));
+    window.dispatchEvent(new Event("dreamy-stats-updated"));
   } catch {}
 }
 
