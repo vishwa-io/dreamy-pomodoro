@@ -226,27 +226,6 @@ html[data-theme="light"] .todo-add button { color: rgba(0,0,0,.65); }
 }
 
 
-.about-link {
-  position: fixed;
-  right: 21px;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  z-index: 9;
-  color: rgba(255,255,255,.62);
-  font-family: var(--font-delius), cursive;
-  font-size: 14px;
-  line-height: 18px;
-  text-decoration: none;
-  text-shadow: 0 1px 12px rgba(0,0,0,.35);
-  pointer-events: auto;
-  transition: color .2s ease, transform .2s ease;
-}
-.about-link:hover,
-.about-link:focus-visible {
-  color: #fff;
-  outline: none;
-  transform: translateY(-1px);
-}
-
 .about-page {
   min-height: 100svh;
   min-height: 100vh;
@@ -400,11 +379,6 @@ html[data-theme="light"] .about-links a:hover,
 html[data-theme="light"] .about-links a:focus-visible { color: #000; }
 
 @media (max-width: 700px) {
-  .about-link {
-    right: 15px;
-    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-    font-size: 13px;
-  }
   .about-page { padding: 20px; }
   .about-shell { min-height: calc(100svh - 40px); }
   .about-back { top: 15px; left: 16px; }
@@ -421,4 +395,248 @@ html[data-theme="light"] .about-links a:focus-visible { color: #000; }
     padding-top: 24px;
   }
   .about-note { margin-top: 30px; }
+}
+
+
+.about-pill-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 30px;
+  padding: 0 7px;
+  border-left: 1px solid rgba(255,255,255,.14);
+  border-radius: 0 999px 999px 0;
+  color: rgba(255,255,255,.68);
+  font-family: var(--font-delius), cursive;
+  font-size: 14px;
+  line-height: 18px;
+  text-decoration: none;
+  text-shadow: 0 1px 12px rgba(0,0,0,.35);
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+.about-pill-link:hover,
+.about-pill-link:focus-visible {
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  outline: none;
+}
+.about-pill-link:active { transform: translateY(1px); }
+
+.about-page {
+  position: relative;
+  width: 100vw;
+  min-height: 100svh;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #0e0e0e;
+}
+.about-page > .pond-hero {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100svh;
+  min-height: 100vh;
+}
+.about-page > .pond-hero canvas {
+  width: 100%;
+  height: 100%;
+}
+.about-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 70px 20px 40px;
+  pointer-events: none;
+}
+.about-back {
+  position: fixed;
+  top: 22px;
+  left: 22px;
+  z-index: 8;
+  color: rgba(255,255,255,.68);
+  font-family: var(--font-delius), cursive;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
+  text-shadow: 0 1px 14px rgba(0,0,0,.38);
+  pointer-events: auto;
+  transition: color .2s ease, transform .2s ease;
+}
+.about-back span { margin-right: 4px; }
+.about-back:hover,
+.about-back:focus-visible {
+  color: #fff;
+  outline: none;
+  transform: translateX(-1px);
+}
+.about-card {
+  width: min(720px, calc(100vw - 40px));
+  max-height: min(720px, calc(100svh - 110px));
+  overflow: auto;
+  padding: clamp(30px, 5vw, 56px);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 26px;
+  background: rgba(9,14,21,.48);
+  box-shadow: 0 28px 80px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.03);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  pointer-events: auto;
+  scrollbar-width: thin;
+}
+.about-kicker {
+  color: rgba(255,255,255,.48);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.about-card h1 {
+  max-width: 630px;
+  margin: 12px 0 18px;
+  color: rgba(255,255,255,.96);
+  font-family: var(--font-delius), cursive;
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -.025em;
+}
+.about-lede {
+  max-width: 620px;
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 24px 32px;
+  margin-top: 36px;
+  padding-top: 26px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.about-label {
+  color: rgba(255,255,255,.42);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.about-grid p {
+  margin: 8px 0 0;
+  color: rgba(255,255,255,.68);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.about-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.6);
+  font-family: var(--font-delius), cursive;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.about-note span { color: rgba(255,255,255,.35); }
+.about-note p { margin: 0; }
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 28px;
+}
+.about-links a {
+  color: rgba(255,255,255,.7);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.about-links a:hover,
+.about-links a:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+html[data-theme="light"] .about-page { background: #f4f0e8; }
+html[data-theme="light"] .about-pill-link {
+  color: rgba(0,0,0,.68);
+  border-left-color: rgba(0,0,0,.14);
+  text-shadow: none;
+}
+html[data-theme="light"] .about-pill-link:hover,
+html[data-theme="light"] .about-pill-link:focus-visible {
+  color: #000;
+  background: rgba(0,0,0,.06);
+}
+html[data-theme="light"] .about-back {
+  color: rgba(0,0,0,.62);
+  text-shadow: 0 1px 12px rgba(255,255,255,.2);
+}
+html[data-theme="light"] .about-back:hover,
+html[data-theme="light"] .about-back:focus-visible { color: #000; }
+html[data-theme="light"] .about-card {
+  border-color: rgba(0,0,0,.1);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 28px 80px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.28);
+}
+html[data-theme="light"] .about-kicker,
+html[data-theme="light"] .about-label { color: rgba(0,0,0,.42); }
+html[data-theme="light"] .about-card h1 { color: rgba(0,0,0,.92); }
+html[data-theme="light"] .about-lede,
+html[data-theme="light"] .about-grid p { color: rgba(0,0,0,.64); }
+html[data-theme="light"] .about-grid,
+html[data-theme="light"] .about-note { border-top-color: rgba(0,0,0,.09); }
+html[data-theme="light"] .about-note { color: rgba(0,0,0,.56); }
+html[data-theme="light"] .about-note span { color: rgba(0,0,0,.28); }
+html[data-theme="light"] .about-links a { color: rgba(0,0,0,.62); }
+html[data-theme="light"] .about-links a:hover,
+html[data-theme="light"] .about-links a:focus-visible { color: #000; }
+
+@media (max-width: 700px) {
+  .about-page > .pond-hero { min-height: 100vh; }
+  .about-overlay {
+    padding: 60px 14px 34px;
+  }
+  .about-back {
+    top: 15px;
+    left: 16px;
+    font-size: 13px;
+  }
+  .about-card {
+    width: min(100%, 560px);
+    max-height: calc(100svh - 94px);
+    padding: 28px 22px 26px;
+    border-radius: 20px;
+  }
+  .about-card h1 {
+    font-size: clamp(32px, 10vw, 47px);
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 30px;
+    padding-top: 22px;
+  }
+  .about-note {
+    margin-top: 28px;
+    padding-top: 20px;
+  }
+  .about-pill-link {
+    min-width: 34px;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 13px;
+  }
 }
