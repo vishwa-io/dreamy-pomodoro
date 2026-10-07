@@ -108,9 +108,14 @@ export default function Pomodoro() {
   }, [running]);
 
   useEffect(() => {
+    document.documentElement.toggleAttribute("data-timer-running", running);
+  }, [running]);
+
+  useEffect(() => {
     document.title = `${formatTime(seconds)} · ${mode}`;
     return () => {
       document.title = "Dreamy Pomodoro";
+      document.documentElement.removeAttribute("data-timer-running");
     };
   }, [seconds, mode]);
 
