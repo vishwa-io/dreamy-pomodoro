@@ -4,8 +4,41 @@ import { useEffect, useMemo, useState } from "react";
 
 const FOCUS_SECONDS = 25 * 60;
 const BREAK_SECONDS = 5 * 60;
+const STATS_KEY = "dreamy-pomodoro-stats";
+const CLIENT_KEY = "dreamy-pomodoro-client";
 
 type Mode = "focus" | "break";
+type Counts = Record<string, number>;
+
+function todayKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function recordFocusCompletion() {
+  const day = todayKey();
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STATS_KEY) || "{}") as Counts;
+    saved[day] = (saved[day] || 0) + 1;
+    localStorage.setItem(STATS_KEY, JSON.stringify(saved));
+
+    let clientId = localStorage.getItem(CLIENT_KEY);
+    if (!clientId) {
+      clientId = crypto.randomUUID();
+      localStorage.setItem(CLIENT_KEY, clientId);
+    }
+
+    void fetch("/api/pomodoro-stats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId, day }),
+    }).catch(() => {});
+  } catch {}
+}
 
 export default function Pomodoro() {
   const [mode, setMode] = useState<Mode>("focus");
@@ -18,6 +51,11 @@ export default function Pomodoro() {
     const timer = window.setInterval(() => {
       setSeconds((current) => {
         if (current > 1) return current - 1;
+
+        if (mode === "focus") {
+          recordFocusCompletion();
+        }
+
         setRunning(false);
         setMode((currentMode) => (currentMode === "focus" ? "break" : "focus"));
         return mode === "focus" ? BREAK_SECONDS : FOCUS_SECONDS;
