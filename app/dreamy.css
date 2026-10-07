@@ -1130,7 +1130,8 @@ html[data-theme="light"] .stats-tooltip strong { color: rgba(180,54,105,.9); }
   .stats-scroll { margin-top: 24px; }
   .stats-scroll-inner { min-width: max-content; }
   .stats-tooltip {
-    display: none;
+    display: flex;
+    max-width: calc(100vw - 24px);
   }
 }
 
@@ -1187,7 +1188,4 @@ html[data-theme="light"] .notification-toggle.enabled::after {
 }
 
 
-/* Keep the bottom pill distraction-free while a timer is actively running. */
-html[data-timer-running] .about-pill-link {
-  display: none;
-}
+/* Stats/about are removed from the controls while the timer is running. */
