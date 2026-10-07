@@ -1137,3 +1137,12 @@ html[data-theme="light"] .stats-tooltip strong { color: rgba(180,54,105,.9); }
 @media (prefers-reduced-motion: reduce) {
   .stats-cell { transition: none; }
 }
+
+
+.notification-toggle.enabled {
+  color: rgba(255,187,218,.95);
+}
+.notification-toggle:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+}
