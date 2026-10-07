@@ -6,6 +6,13 @@ import PondHero from "../../pond/pond-hero";
 
 type Counts = Record<string, number>;
 type Week = Date[];
+type HoveredDay = {
+  key: string;
+  date: Date;
+  count: number;
+  x: number;
+  y: number;
+};
 
 const STORAGE_KEY = "dreamy-pomodoro-stats";
 const YEAR = 2026;
@@ -106,6 +113,7 @@ function tooltipFor(date: Date, count: number) {
 
 export default function StatsPage() {
   const [counts, setCounts] = useState<Counts>({});
+  const [hovered, setHovered] = useState<HoveredDay | null>(null);
   const weeks = useMemo(() => buildCalendar(), []);
 
   const total = useMemo(
@@ -194,12 +202,39 @@ export default function StatsPage() {
                           date < START_DATE || date > END_DATE;
                         const count = outside ? 0 : counts[keyFor(date)] || 0;
 
+                        const cellKey = keyFor(date);
+
                         return (
                           <span
                             className={`stats-cell level-${levelFor(count)}${outside ? " outside" : ""}`}
-                            key={keyFor(date)}
+                            key={cellKey}
                             title={outside ? "" : tooltipFor(date, count)}
                             aria-hidden="true"
+                            tabIndex={outside ? -1 : 0}
+                            onMouseEnter={(event) => {
+                              if (outside) return;
+                              const rect = event.currentTarget.getBoundingClientRect();
+                              setHovered({
+                                key: cellKey,
+                                date,
+                                count,
+                                x: rect.left + rect.width / 2,
+                                y: rect.top,
+                              });
+                            }}
+                            onMouseLeave={() => setHovered(null)}
+                            onFocus={(event) => {
+                              if (outside) return;
+                              const rect = event.currentTarget.getBoundingClientRect();
+                              setHovered({
+                                key: cellKey,
+                                date,
+                                count,
+                                x: rect.left + rect.width / 2,
+                                y: rect.top,
+                              });
+                            }}
+                            onBlur={() => setHovered(null)}
                           />
                         );
                       })}
@@ -210,6 +245,27 @@ export default function StatsPage() {
             </div>
           </div>
         </section>
+        {hovered && (
+          <div
+            className="stats-tooltip"
+            role="status"
+            style={{
+              left: hovered.x,
+              top: hovered.y - 10,
+            }}
+          >
+            <span>
+              {new Intl.DateTimeFormat("en", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }).format(hovered.date)}
+            </span>
+            <strong>
+              {hovered.count} focus session{hovered.count === 1 ? "" : "s"}
+            </strong>
+          </div>
+        )}
       </div>
     </main>
   );
