@@ -854,6 +854,7 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
     // On narrow portrait screens the fixed 680px design gets visually tiny.
     // Give only swans and blossoms a gentle mobile boost; the pond itself stays unchanged.
     const portraitBoost = W < 800 && H > W ? 1.32 : 1;
+    const flowerPortraitBoost = W < 800 && H > W ? 1.7 : 1;
     let L = 78 * scale;
     /* ---------- offscreen layers ---------- */
     const paint = document.createElement("canvas"); // swans + leaves
@@ -1031,7 +1032,7 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
                 blooms.push({
                     t: 0.35 + r() * 0.7,
                     off: (r() - 0.5) * 22 * scale,
-                    r: (2.3 + r() * 1.6) * scale * portraitBoost,
+                    r: (2.3 + r() * 1.6) * scale * flowerPortraitBoost,
                     rot: r() * Math.PI,
                     hue: 342 + r() * 14,
                     light: 86 + r() * 8,
