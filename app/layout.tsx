@@ -3,7 +3,6 @@ import { Inter, Manrope, Delius, Noto_Sans_Devanagari, Noto_Naskh_Arabic, Gaegu 
 import "./globals.css";
 import "./dreamy.css";
 import AudioProvider from "./audio-provider";
-import ServiceWorkerRegister from "./sw-register";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -86,7 +85,6 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body>
-        <ServiceWorkerRegister />
         <AudioProvider>{children}</AudioProvider>
       </body>
     </html>
