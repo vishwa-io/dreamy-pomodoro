@@ -8,8 +8,9 @@ type Counts = Record<string, number>;
 type Week = Date[];
 
 const STORAGE_KEY = "dreamy-pomodoro-stats";
-const START_DATE = new Date(2026, 9, 1);
-const END_DATE = new Date(2027, 8, 30);
+const YEAR = 2026;
+const START_DATE = new Date(YEAR, 0, 1);
+const END_DATE = new Date(YEAR, 11, 31);
 
 function addDays(date: Date, amount: number) {
   const next = new Date(date);
@@ -32,17 +33,19 @@ function buildCalendar() {
 
   while (cursor <= gridEnd) {
     const week: Week = [];
+
     for (let day = 0; day < 7; day += 1) {
       week.push(new Date(cursor));
       cursor = addDays(cursor, 1);
     }
+
     weeks.push(week);
   }
 
   return weeks;
 }
 
-function monthLabelForWeek(week: Week[]) {
+function monthLabelForWeek(week: Week) {
   const first = week.find(
     (date) =>
       date >= START_DATE &&
@@ -58,13 +61,22 @@ function monthLabelForWeek(week: Week[]) {
 function loadCounts(): Counts {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return {};
+
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) {
+      return {};
+    }
 
     return Object.entries(saved).reduce<Counts>((result, [day, value]) => {
       const count = Number(value);
-      if (/^\d{4}-\d{2}-\d{2}$/.test(day) && Number.isFinite(count) && count > 0) {
+
+      if (
+        /^\d{4}-\d{2}-\d{2}$/.test(day) &&
+        Number.isFinite(count) &&
+        count > 0
+      ) {
         result[day] = Math.floor(count);
       }
+
       return result;
     }, {});
   } catch {
@@ -95,17 +107,26 @@ function tooltipFor(date: Date, count: number) {
 export default function StatsPage() {
   const [counts, setCounts] = useState<Counts>({});
   const weeks = useMemo(() => buildCalendar(), []);
-  useEffect(() => {
-    setCounts(loadCounts());
 
+  const total = useMemo(
+    () =>
+      Object.entries(counts).reduce((sum, [day, count]) => {
+        return day.startsWith(`${YEAR}-`) ? sum + count : sum;
+      }, 0),
+    [counts]
+  );
+
+  useEffect(() => {
     const refresh = () => setCounts(loadCounts());
+
+    refresh();
+    window.addEventListener("dreamy-stats-updated", refresh);
+
     const onStorage = (event: StorageEvent) => {
       if (event.key === STORAGE_KEY) refresh();
     };
 
-    window.addEventListener("dreamy-stats-updated", refresh);
     window.addEventListener("storage", onStorage);
-
     document.title = "Focus · Dreamy Pomodoro";
 
     return () => {
@@ -124,58 +145,59 @@ export default function StatsPage() {
         </Link>
 
         <section className="stats-panel" aria-labelledby="stats-title">
-          <div className="stats-topline">
-            <div>
-              <div className="about-kicker">focus activity</div>
-              <h1 id="stats-title">Oct 2026 — Sep 2027</h1>
-            </div>
+          <div className="stats-header">
+            <h1 id="stats-title">
+              {total} focus session{total === 1 ? "" : "s"} in {YEAR}
+            </h1>
 
             <div className="stats-legend" aria-label="Focus sessions: less to more">
-              <span>less</span>
+              <span>Less</span>
               <i className="stats-cell level-0" />
               <i className="stats-cell level-1" />
               <i className="stats-cell level-2" />
               <i className="stats-cell level-3" />
               <i className="stats-cell level-4" />
-              <span>more</span>
+              <span>More</span>
             </div>
           </div>
 
-          <div className="stats-calendar-scroll">
-            <div className="stats-calendar-stage">
-              <div className="stats-months" aria-hidden="true">
-                <span className="stats-month-spacer" />
-                {weeks.map((week, index) => (
-                  <span className="stats-month" key={index}>
-                    {monthLabelForWeek(week)}
-                  </span>
-                ))}
+          <div className="stats-scroll" aria-label="Focus session history">
+            <div className="stats-scroll-inner">
+              <div className="stats-day-column" aria-hidden="true">
+                <span />
+                <span>Mon</span>
+                <span />
+                <span>Wed</span>
+                <span />
+                <span>Fri</span>
+                <span />
               </div>
 
-              <div className="stats-grid-shell">
-                <div className="stats-day-labels" aria-hidden="true">
-                  <span>Mon</span>
-                  <span>Wed</span>
-                  <span>Fri</span>
+              <div className="stats-calendar-area">
+                <div className="stats-month-row" aria-hidden="true">
+                  {weeks.map((week, index) => (
+                    <span className="stats-month-slot" key={index}>
+                      {monthLabelForWeek(week)}
+                    </span>
+                  ))}
                 </div>
 
                 <div
                   className="stats-calendar"
                   role="img"
-                  aria-label="Pomodoro focus sessions by day, shown as a GitHub-style contribution calendar"
+                  aria-label={`Focus sessions for ${YEAR}, shown as a GitHub-style contribution calendar`}
                 >
                   {weeks.map((week, weekIndex) => (
-                    <div className="stats-week" key={weekIndex} aria-hidden="true">
+                    <div className="stats-week" key={weekIndex}>
                       {week.map((date) => {
-                        const key = keyFor(date);
                         const outside =
                           date < START_DATE || date > END_DATE;
-                        const count = outside ? 0 : counts[key] || 0;
+                        const count = outside ? 0 : counts[keyFor(date)] || 0;
 
                         return (
                           <span
                             className={`stats-cell level-${levelFor(count)}${outside ? " outside" : ""}`}
-                            key={key}
+                            key={keyFor(date)}
                             title={outside ? "" : tooltipFor(date, count)}
                             aria-hidden="true"
                           />
