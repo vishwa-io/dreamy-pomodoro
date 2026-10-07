@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 const FOCUS_SECONDS = 25 * 60;
 const BREAK_SECONDS = 5 * 60;
 const STATS_KEY = "dreamy-pomodoro-stats";
+const NOTIFICATIONS_KEY = "dreamy-notifications-enabled";
 
 type Mode = "focus" | "break";
 type Counts = Record<string, number>;
@@ -15,6 +16,29 @@ function todayKey() {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function notifyTimerFinished(mode: Mode) {
+  try {
+    if (
+      typeof Notification === "undefined" ||
+      Notification.permission !== "granted" ||
+      localStorage.getItem(NOTIFICATIONS_KEY) !== "true"
+    ) {
+      return;
+    }
+
+    const isFocus = mode === "focus";
+    new Notification(
+      isFocus ? "Focus session complete" : "Break complete",
+      {
+        body: isFocus
+          ? "Nice work. Your 5-minute break is ready."
+          : "Break over. Ready for another focus session?",
+        tag: "dreamy-pomodoro",
+      }
+    );
+  } catch {}
 }
 
 function recordFocusCompletion() {
