@@ -1185,3 +1185,9 @@ html[data-theme="light"] .notification-toggle.enabled::after {
   opacity: .3;
   cursor: not-allowed;
 }
+
+
+/* Keep the bottom pill distraction-free while a timer is actively running. */
+html[data-timer-running] .about-pill-link {
+  display: none;
+}
