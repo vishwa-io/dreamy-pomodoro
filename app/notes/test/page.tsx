@@ -155,7 +155,7 @@ export default function StatsPage() {
                   <span
                     className="stats-month"
                     key={`${label}-${index}`}
-                    style={{ gridColumn: index + 1 }}
+                    style={{ left: `${37 + index * 17}px` }}
                   >
                     {label}
                   </span>
