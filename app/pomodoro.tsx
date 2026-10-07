@@ -112,6 +112,11 @@ export default function Pomodoro() {
 
   useEffect(() => {
     document.documentElement.toggleAttribute("data-timer-running", running);
+    window.dispatchEvent(
+      new CustomEvent("dreamy-timer-running", {
+        detail: running,
+      })
+    );
   }, [running]);
 
   useEffect(() => {
