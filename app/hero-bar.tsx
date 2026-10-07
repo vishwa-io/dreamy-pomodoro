@@ -8,21 +8,23 @@ export default function HeroBar() {
   const [timerRunning, setTimerRunning] = useState(false);
 
   useEffect(() => {
-    const root = document.documentElement;
-
     const sync = () => {
-      setTimerRunning(root.hasAttribute("data-timer-running"));
+      setTimerRunning(
+        document.documentElement.hasAttribute("data-timer-running")
+      );
+    };
+
+    const onTimerRunning = (event: Event) => {
+      const running = (event as CustomEvent<boolean>).detail;
+      setTimerRunning(Boolean(running));
     };
 
     sync();
+    window.addEventListener("dreamy-timer-running", onTimerRunning);
 
-    const observer = new MutationObserver(sync);
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["data-timer-running"],
-    });
-
-    return () => observer.disconnect();
+    return () => {
+      window.removeEventListener("dreamy-timer-running", onTimerRunning);
+    };
   }, []);
 
   return (
