@@ -876,6 +876,7 @@ html[data-theme="light"] .about-card {
 
 
 
+
 .stats-shell {
   position: fixed;
   inset: 0;
@@ -891,8 +892,7 @@ html[data-theme="light"] .about-card {
   padding: clamp(26px, 4vw, 40px);
   border: 1px solid rgba(255,255,255,.14);
   border-radius: 22px;
-  background:
-    linear-gradient(145deg, rgba(22,18,30,.60), rgba(11,15,24,.42));
+  background: linear-gradient(145deg, rgba(22,18,30,.60), rgba(11,15,24,.42));
   box-shadow:
     0 26px 90px rgba(0,0,0,.30),
     inset 0 1px 0 rgba(255,255,255,.06),
@@ -938,17 +938,17 @@ html[data-theme="light"] .about-card {
 .stats-calendar-scroll {
   width: 100%;
   min-width: 0;
-  margin-top: 30px;
+  margin-top: 29px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0 0 5px;
+  padding: 0 0 6px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,174,213,.26) transparent;
 }
 .stats-calendar-scroll::-webkit-scrollbar { height: 5px; }
 .stats-calendar-scroll::-webkit-scrollbar-track { background: transparent; }
 .stats-calendar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,174,213,.26);
+  background: rgba(255,174,213,.28);
   border-radius: 999px;
 }
 .stats-calendar-stage {
@@ -956,34 +956,20 @@ html[data-theme="light"] .about-card {
   min-width: 100%;
 }
 .stats-months {
-  display: grid;
-  grid-template-columns: 37px max-content;
-  height: 17px;
-  margin: 0;
+  position: relative;
+  width: 100%;
+  min-width: 938px;
+  height: 18px;
 }
-.stats-months::before {
-  content: "";
-  grid-column: 1;
-}
-.stats-months .stats-month {
-  position: static;
-  grid-row: 1;
-  width: 13px;
+.stats-month {
+  position: absolute;
+  top: 0;
   color: rgba(255,255,255,.42);
   font-family: var(--font-manrope), sans-serif;
   font-size: 8px;
   line-height: 10px;
   white-space: nowrap;
 }
-.stats-months {
-  position: relative;
-}
-.stats-months .stats-month {
-  position: absolute;
-  top: 0;
-  transform: translateX(0);
-}
-.stats-months .stats-month:nth-child(1) { left: 37px; }
 .stats-grid-shell {
   display: grid;
   grid-template-columns: 28px max-content;
@@ -1028,22 +1014,12 @@ html[data-theme="light"] .about-card {
   margin: 0 auto;
   border: 1px solid rgba(255,255,255,.05);
   border-radius: 3px;
-  background: rgba(255,210,235,.055);
+  background: rgba(255,215,237,.055);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.015);
 }
-.stats-cell.level-0 { background: rgba(255,215,237,.055); }
-.stats-cell.level-1 {
-  background: rgba(245,137,190,.28);
-  border-color: rgba(255,171,213,.13);
-}
-.stats-cell.level-2 {
-  background: rgba(247,118,180,.44);
-  border-color: rgba(255,174,213,.17);
-}
-.stats-cell.level-3 {
-  background: rgba(244,92,163,.63);
-  border-color: rgba(255,171,211,.20);
-}
+.stats-cell.level-1 { background: rgba(245,137,190,.28); border-color: rgba(255,171,213,.13); }
+.stats-cell.level-2 { background: rgba(247,118,180,.44); border-color: rgba(255,174,213,.17); }
+.stats-cell.level-3 { background: rgba(244,92,163,.63); border-color: rgba(255,171,211,.20); }
 .stats-cell.level-4 {
   background: rgba(246,74,151,.84);
   border-color: rgba(255,191,220,.28);
@@ -1053,8 +1029,7 @@ html[data-theme="light"] .about-card {
 
 html[data-theme="light"] .stats-panel {
   border-color: rgba(0,0,0,.09);
-  background:
-    linear-gradient(145deg, rgba(255,250,253,.68), rgba(247,239,245,.48));
+  background: linear-gradient(145deg, rgba(255,250,253,.68), rgba(247,239,245,.48));
   box-shadow:
     0 26px 90px rgba(0,0,0,.1),
     inset 0 1px 0 rgba(255,255,255,.5),
@@ -1066,24 +1041,17 @@ html[data-theme="light"] .stats-month,
 html[data-theme="light"] .stats-day-labels { color: rgba(0,0,0,.4); }
 html[data-theme="light"] .stats-cell {
   border-color: rgba(160,90,120,.08);
-  background: rgba(200,125,160,.07);
+  background: rgba(140,70,105,.07);
 }
-html[data-theme="light"] .stats-cell.level-0 { background: rgba(140,70,105,.07); }
 html[data-theme="light"] .stats-cell.level-1 { background: rgba(236,126,177,.25); }
 html[data-theme="light"] .stats-cell.level-2 { background: rgba(239,107,166,.4); }
 html[data-theme="light"] .stats-cell.level-3 { background: rgba(238,84,151,.58); }
 html[data-theme="light"] .stats-cell.level-4 { background: rgba(239,62,140,.76); }
-html[data-theme="light"] .stats-calendar-scroll {
-  scrollbar-color: rgba(224,106,163,.3) transparent;
-}
-html[data-theme="light"] .stats-calendar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(224,106,163,.3);
-}
+html[data-theme="light"] .stats-calendar-scroll { scrollbar-color: rgba(224,106,163,.3) transparent; }
+html[data-theme="light"] .stats-calendar-scroll::-webkit-scrollbar-thumb { background: rgba(224,106,163,.3); }
 
 @media (max-width: 700px) {
-  .stats-shell {
-    padding: 54px 10px 24px;
-  }
+  .stats-shell { padding: 54px 10px 24px; }
   .stats-panel {
     width: min(100%, 560px);
     padding: 27px 18px 22px;
@@ -1094,15 +1062,11 @@ html[data-theme="light"] .stats-calendar-scroll::-webkit-scrollbar-thumb {
     flex-direction: column;
     gap: 11px;
   }
-  .stats-topline h1 {
-    font-size: clamp(28px, 8.5vw, 42px);
-  }
+  .stats-topline h1 { font-size: clamp(28px, 8.5vw, 42px); }
   .stats-calendar-scroll {
-    margin-top: 26px;
+    margin-top: 25px;
     margin-left: 0;
     width: 100%;
   }
-  .stats-calendar-stage {
-    min-width: max-content;
-  }
+  .stats-calendar-stage { min-width: 938px; }
 }
