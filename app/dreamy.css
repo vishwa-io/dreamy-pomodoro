@@ -1139,8 +1139,47 @@ html[data-theme="light"] .stats-tooltip strong { color: rgba(180,54,105,.9); }
 }
 
 
+.notification-toggle {
+  position: relative;
+}
 .notification-toggle.enabled {
-  color: rgba(255,187,218,.95);
+  color: rgba(255,236,247,.98);
+  background: rgba(245,92,163,.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,190,220,.24),
+    0 0 12px rgba(255,105,181,.18);
+}
+.notification-toggle.enabled:hover,
+.notification-toggle.enabled:focus-visible {
+  color: #fff;
+  background: rgba(245,92,163,.30);
+}
+.notification-toggle.enabled::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffd7ea;
+  box-shadow: 0 0 6px rgba(255,215,234,.85);
+}
+html[data-theme="light"] .notification-toggle.enabled {
+  color: rgba(151,39,91,.92);
+  background: rgba(239,112,171,.17);
+  box-shadow:
+    inset 0 0 0 1px rgba(190,69,124,.18),
+    0 0 10px rgba(224,106,163,.13);
+}
+html[data-theme="light"] .notification-toggle.enabled:hover,
+html[data-theme="light"] .notification-toggle.enabled:focus-visible {
+  color: #8b1e58;
+  background: rgba(239,112,171,.24);
+}
+html[data-theme="light"] .notification-toggle.enabled::after {
+  background: #a93270;
+  box-shadow: 0 0 5px rgba(169,50,112,.35);
 }
 .notification-toggle:disabled {
   opacity: .3;
