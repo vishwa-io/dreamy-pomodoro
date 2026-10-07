@@ -83,6 +83,12 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{navigator.serviceWorker&&navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})})}catch(e){}",
+          }}
+        />
       </head>
       <body>
         <AudioProvider>{children}</AudioProvider>
