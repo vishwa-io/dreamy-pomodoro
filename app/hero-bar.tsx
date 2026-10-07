@@ -158,25 +158,51 @@ function Todo() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState<string[]>([]);
   const [checked, setChecked] = useState<boolean[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("dreamy-tasks") || "[]");
+
       if (Array.isArray(saved)) {
-        setTasks(saved.map((item) => String(item.text ?? "")));
-        setChecked(saved.map((item) => Boolean(item.done)));
+        const nextTasks: string[] = [];
+        const nextChecked: boolean[] = [];
+
+        saved.forEach((item) => {
+          if (typeof item === "string") {
+            nextTasks.push(item);
+            nextChecked.push(false);
+            return;
+          }
+
+          if (item && typeof item === "object") {
+            nextTasks.push(String(item.text ?? ""));
+            nextChecked.push(Boolean(item.done));
+          }
+        });
+
+        setTasks(nextTasks);
+        setChecked(nextChecked);
       }
-    } catch {}
+    } catch {
+      // Ignore malformed or unavailable storage and keep an empty list.
+    } finally {
+      setLoaded(true);
+    }
   }, []);
 
   useEffect(() => {
+    if (!loaded) return;
+
     try {
       localStorage.setItem(
         "dreamy-tasks",
         JSON.stringify(tasks.map((text, i) => ({ text, done: checked[i] ?? false })))
       );
-    } catch {}
-  }, [tasks, checked]);
+    } catch {
+      // Storage can be full or unavailable; keep the current in-memory state.
+    }
+  }, [loaded, tasks, checked]);
 
   const addTask = () => {
     const value = task.trim();
