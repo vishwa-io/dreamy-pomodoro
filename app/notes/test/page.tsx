@@ -222,7 +222,11 @@ export default function StatsPage() {
                                 y: rect.top,
                               });
                             }}
-                            onMouseLeave={() => setHovered(null)}
+                            onMouseLeave={() => {
+                              if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                                setHovered(null);
+                              }
+                            }}
                             onFocus={(event) => {
                               if (outside) return;
                               const rect = event.currentTarget.getBoundingClientRect();
@@ -234,7 +238,22 @@ export default function StatsPage() {
                                 y: rect.top,
                               });
                             }}
-                            onBlur={() => setHovered(null)}
+                            onBlur={() => {
+                              if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                                setHovered(null);
+                              }
+                            }}
+                            onClick={(event) => {
+                              if (outside) return;
+                              const rect = event.currentTarget.getBoundingClientRect();
+                              setHovered({
+                                key: cellKey,
+                                date,
+                                count,
+                                x: Math.min(Math.max(rect.left + rect.width / 2, 12), window.innerWidth - 12),
+                                y: rect.top,
+                              });
+                            }}
                           />
                         );
                       })}
