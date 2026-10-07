@@ -1,49 +1,75 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import SplineEmbed from "./spline-embed";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About · Dreamy Pomodoro",
 };
 
-/**
- * About page.
- *
- * Same 540px column and spacing system as the homepage; the 3D sits as a
- * height-capped block above the copy rather than a full-bleed hero, so it
- * doesn't overwhelm the 14px type.
- */
 export default function About() {
   return (
-    <main className="site">
-      <section className="intro-section">
-        <div className="content">
-          <div className="stack">
-            <SplineEmbed />
+    <main className="about-page">
+      <div className="about-shell">
+        <Link href="/" className="about-back">
+          ← back to the pond
+        </Link>
 
-            <div className="body-copy">
-              <div className="information">
-                <p className="appear">
-                  PLACEHOLDER — opening line about who you are and what you make.
-                </p>
-                <p className="appear">
-                  PLACEHOLDER — a paragraph of background. Same measure as the
-                  homepage; keep it to a few sentences.
-                </p>
-                <p className="appear">
-                  PLACEHOLDER — what you&apos;re working on now, or what you&apos;re
-                  looking for.
-                </p>
-                <p className="appear">
-                  <Link href="/">
-                    <span className="link-label">Back home</span>
-                  </Link>
-                </p>
-              </div>
+        <section className="about-card" aria-labelledby="about-title">
+          <div className="about-kicker">dreamy pomodoro</div>
+          <h1 id="about-title">A quiet little timer for slow, focused days.</h1>
+
+          <p className="about-lede">
+            I made Dreamy Pomodoro as a softer alternative to productivity apps
+            that can feel a little too busy. The idea is simple: sit by the
+            pond, put on some music, and focus on one thing at a time.
+          </p>
+
+          <div className="about-grid">
+            <div>
+              <span className="about-label">inside</span>
+              <p>25 min focus · 5 min break · todo · ambient music</p>
+            </div>
+            <div>
+              <span className="about-label">the pond</span>
+              <p>Interactive water, swans, ripples, wakes, and four little moods.</p>
+            </div>
+            <div>
+              <span className="about-label">built with</span>
+              <p>Next.js · TypeScript · Canvas · CSS</p>
+            </div>
+            <div>
+              <span className="about-label">made by</span>
+              <p>
+                Vishwa — a frontend and UI/UX learner who likes making small,
+                cozy things for the web.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+
+          <div className="about-note">
+            <span>—</span>
+            <p>
+              No streaks. No productivity scores. Just a timer, a pond, and
+              enough space to concentrate.
+            </p>
+          </div>
+
+          <div className="about-links">
+            <a href="https://github.com/vishwa-io" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/vishwa-patel-0598a238/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+            <a href="https://x.com/vi_shwaaa" target="_blank" rel="noreferrer">
+              X
+            </a>
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
