@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 const FOCUS_SECONDS = 25 * 60;
 const BREAK_SECONDS = 5 * 60;
 const STATS_KEY = "dreamy-pomodoro-stats";
-const CLIENT_KEY = "dreamy-pomodoro-client";
 
 type Mode = "focus" | "break";
 type Counts = Record<string, number>;
@@ -25,18 +24,6 @@ function recordFocusCompletion() {
     const saved = JSON.parse(localStorage.getItem(STATS_KEY) || "{}") as Counts;
     saved[day] = (saved[day] || 0) + 1;
     localStorage.setItem(STATS_KEY, JSON.stringify(saved));
-
-    let clientId = localStorage.getItem(CLIENT_KEY);
-    if (!clientId) {
-      clientId = crypto.randomUUID();
-      localStorage.setItem(CLIENT_KEY, clientId);
-    }
-
-    void fetch("/api/pomodoro-stats", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clientId, day }),
-    }).catch(() => {});
   } catch {}
 }
 
