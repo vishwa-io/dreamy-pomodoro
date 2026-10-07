@@ -1188,4 +1188,7 @@ html[data-theme="light"] .notification-toggle.enabled::after {
 }
 
 
-/* Stats/about are removed from the controls while the timer is running. */
+/* Stats/about stay out of the bottom pill while the timer is actively running. */
+html[data-timer-running] .about-pill-link {
+  display: none !important;
+}
