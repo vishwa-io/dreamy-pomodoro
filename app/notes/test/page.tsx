@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PondHero from "../../pond/pond-hero";
 
 type GitHubUser = {
   login: string;
@@ -69,6 +70,7 @@ export default async function GitHubStats() {
 
   return (
     <main className="about-page stats-page">
+      <PondHero />
       <div className="stats-shell">
         <Link href="/" className="about-back">
           <span>←</span> back to the pond
