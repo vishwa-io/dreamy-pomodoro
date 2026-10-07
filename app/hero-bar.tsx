@@ -5,6 +5,26 @@ import { useEffect, useState } from "react";
 import { useAmbient } from "./audio-provider";
 
 export default function HeroBar() {
+  const [timerRunning, setTimerRunning] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const sync = () => {
+      setTimerRunning(root.hasAttribute("data-timer-running"));
+    };
+
+    sync();
+
+    const observer = new MutationObserver(sync);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-timer-running"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="hero-bar" aria-label="Pond controls">
       <div className="hero-controls">
@@ -12,8 +32,12 @@ export default function HeroBar() {
         <NotificationToggle />
         <ThemeToggle />
         <Todo />
-        <Link className="about-pill-link" href="/notes/test">stats</Link>
-        <Link className="about-pill-link" href="/about">about</Link>
+        {!timerRunning && (
+          <>
+            <Link className="about-pill-link" href="/notes/test">stats</Link>
+            <Link className="about-pill-link" href="/about">about</Link>
+          </>
+        )}
       </div>
     </div>
   );
