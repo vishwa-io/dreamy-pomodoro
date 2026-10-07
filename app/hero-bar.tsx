@@ -11,6 +11,7 @@ export default function HeroBar() {
         <AmbientToggle />
         <ThemeToggle />
         <Todo />
+        <Link className="about-pill-link" href="/notes/test">stats</Link>
         <Link className="about-pill-link" href="/about">about</Link>
       </div>
     </div>
