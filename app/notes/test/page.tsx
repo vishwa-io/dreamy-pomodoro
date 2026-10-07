@@ -42,22 +42,17 @@ function buildCalendar() {
   return weeks;
 }
 
-function buildMonthMarkers(weeks: Week[]) {
-  return weeks.flatMap((week, index) => {
-    const first = week.find(
-      (date) =>
-        date >= START_DATE &&
-        date <= END_DATE &&
-        date.getDate() === 1
-    );
+function monthLabelForWeek(week: Week[]) {
+  const first = week.find(
+    (date) =>
+      date >= START_DATE &&
+      date <= END_DATE &&
+      date.getDate() === 1
+  );
 
-    return first
-      ? [{
-          index,
-          label: new Intl.DateTimeFormat("en", { month: "short" }).format(first),
-        }]
-      : [];
-  });
+  return first
+    ? new Intl.DateTimeFormat("en", { month: "short" }).format(first)
+    : "";
 }
 
 function loadCounts(): Counts {
@@ -100,8 +95,6 @@ function tooltipFor(date: Date, count: number) {
 export default function StatsPage() {
   const [counts, setCounts] = useState<Counts>({});
   const weeks = useMemo(() => buildCalendar(), []);
-  const months = useMemo(() => buildMonthMarkers(weeks), [weeks]);
-
   useEffect(() => {
     setCounts(loadCounts());
 
@@ -151,13 +144,10 @@ export default function StatsPage() {
           <div className="stats-calendar-scroll">
             <div className="stats-calendar-stage">
               <div className="stats-months" aria-hidden="true">
-                {months.map(({ index, label }) => (
-                  <span
-                    className="stats-month"
-                    key={`${label}-${index}`}
-                    style={{ left: `${37 + index * 17}px` }}
-                  >
-                    {label}
+                <span className="stats-month-spacer" />
+                {weeks.map((week, index) => (
+                  <span className="stats-month" key={index}>
+                    {monthLabelForWeek(week)}
                   </span>
                 ))}
               </div>
