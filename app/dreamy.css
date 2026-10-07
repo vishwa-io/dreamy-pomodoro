@@ -640,3 +640,233 @@ html[data-theme="light"] .about-links a:focus-visible { color: #000; }
     font-size: 13px;
   }
 }
+
+
+/* Final Dreamy Pomodoro refinements */
+.hero-controls {
+  gap: 1px;
+  padding: 5px;
+  border-color: rgba(255,255,255,.13);
+  background: rgba(8,12,20,.34);
+  box-shadow:
+    0 14px 42px rgba(0,0,0,.18),
+    inset 0 0 0 1px rgba(255,255,255,.04);
+  backdrop-filter: blur(20px) saturate(125%);
+  -webkit-backdrop-filter: blur(20px) saturate(125%);
+}
+.hero-controls > * + * {
+  border-left: 1px solid rgba(255,255,255,.11);
+  padding-left: 2px;
+}
+.hero-controls .todo-wrap {
+  display: flex;
+  align-items: center;
+}
+.control-icon,
+.todo-button {
+  transition:
+    color .2s ease,
+    background .2s ease,
+    transform .2s ease,
+    opacity .2s ease;
+}
+.control-icon { width: 32px; height: 32px; }
+.todo-button {
+  height: 32px;
+  padding: 0 9px;
+  font-size: 15px;
+}
+.about-pill-link {
+  min-width: 42px;
+  height: 32px;
+  padding: 0 9px;
+  border-left: 0;
+  border-radius: 999px;
+  font-size: 15px;
+  letter-spacing: .01em;
+}
+.about-pill-link:hover,
+.about-pill-link:focus-visible,
+.todo-button:hover,
+.todo-button:focus-visible,
+.control-icon:hover,
+.control-icon:focus-visible {
+  background: rgba(255,255,255,.075);
+}
+.hero-controls > .about-pill-link {
+  margin-left: 1px;
+}
+
+.about-page > .pond-hero {
+  margin-left: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  min-height: 100vh !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  -webkit-mask-size: auto !important;
+  mask-size: auto !important;
+  -webkit-mask-repeat: repeat !important;
+  mask-repeat: repeat !important;
+  -webkit-mask-composite: source-over !important;
+  mask-composite: add !important;
+}
+.about-page > .pond-hero canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.about-page {
+  isolation: isolate;
+}
+.about-overlay {
+  padding: 64px 20px 32px;
+}
+.about-card {
+  width: min(700px, calc(100vw - 48px));
+  max-height: min(640px, calc(100svh - 120px));
+  padding: clamp(32px, 4.5vw, 50px) clamp(30px, 5vw, 54px);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 22px;
+  background:
+    linear-gradient(145deg, rgba(16,24,27,.60), rgba(7,12,18,.42));
+  box-shadow:
+    0 26px 90px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.055),
+    inset 0 0 55px rgba(185,214,207,.035);
+  backdrop-filter: blur(24px) saturate(128%);
+  -webkit-backdrop-filter: blur(24px) saturate(128%);
+  scrollbar-width: none;
+}
+.about-card::-webkit-scrollbar { display: none; }
+.about-kicker {
+  font-size: 9px;
+  letter-spacing: .17em;
+}
+.about-card h1 {
+  max-width: 590px;
+  margin: 10px 0 16px;
+  font-size: clamp(36px, 4.8vw, 52px);
+  line-height: 1.01;
+}
+.about-lede {
+  max-width: 585px;
+  font-size: 12px;
+  line-height: 1.85;
+}
+.about-grid {
+  gap: 22px 40px;
+  margin-top: 30px;
+  padding-top: 22px;
+}
+.about-grid p {
+  margin-top: 7px;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.about-note {
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 20px;
+  font-size: 16px;
+  line-height: 1.45;
+}
+.about-links {
+  gap: 16px;
+  margin-top: 22px;
+}
+.about-links a {
+  font-size: 10px;
+  letter-spacing: .01em;
+}
+.about-back {
+  top: 20px;
+  left: 20px;
+  font-size: 13px;
+}
+.about-back span { opacity: .7; }
+
+html[data-theme="light"] .hero-controls {
+  background: rgba(255,255,255,.5);
+  border-color: rgba(0,0,0,.12);
+  box-shadow:
+    0 14px 42px rgba(0,0,0,.1),
+    inset 0 0 0 1px rgba(255,255,255,.28);
+}
+html[data-theme="light"] .hero-controls > * + * {
+  border-left-color: rgba(0,0,0,.11);
+}
+html[data-theme="light"] .about-page > .pond-hero {
+  background: #2c4e3f;
+}
+html[data-theme="light"] .about-card {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.58), rgba(245,242,235,.42));
+  border-color: rgba(0,0,0,.11);
+  box-shadow:
+    0 26px 90px rgba(0,0,0,.1),
+    inset 0 1px 0 rgba(255,255,255,.38),
+    inset 0 0 55px rgba(80,100,90,.035);
+}
+
+@media (max-width: 700px) {
+  .hero-controls {
+    padding: 4px;
+    max-width: calc(100vw - 18px);
+  }
+  .hero-controls > * + * { padding-left: 1px; }
+  .control-icon { width: 30px; height: 30px; }
+  .todo-button,
+  .about-pill-link {
+    height: 30px;
+    font-size: 14px;
+  }
+  .todo-button { padding: 0 7px; }
+  .about-pill-link { min-width: 40px; padding: 0 7px; }
+
+  .about-overlay {
+    padding: 56px 12px 24px;
+  }
+  .about-back {
+    top: 14px;
+    left: 15px;
+    font-size: 12px;
+  }
+  .about-card {
+    width: min(100%, 560px);
+    max-height: calc(100svh - 88px);
+    padding: 28px 22px 24px;
+    border-radius: 19px;
+  }
+  .about-card h1 {
+    font-size: clamp(31px, 9.5vw, 45px);
+  }
+  .about-lede {
+    font-size: 11px;
+    line-height: 1.75;
+  }
+  .about-grid {
+    gap: 17px;
+    margin-top: 25px;
+    padding-top: 20px;
+  }
+  .about-grid p {
+    font-size: 10.5px;
+  }
+  .about-note {
+    margin-top: 24px;
+    padding-top: 18px;
+    font-size: 15px;
+  }
+  .about-links {
+    margin-top: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-pill-link,
+  .control-icon,
+  .todo-button { transition: none; }
+}
