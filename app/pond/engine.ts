@@ -851,6 +851,9 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
     let W = host.clientWidth || DESIGN_WIDTH;
     let H = host.clientHeight || DESIGN_WIDTH * 0.62;
     let scale = W / DESIGN_WIDTH;
+    // On narrow portrait screens the fixed 680px design gets visually tiny.
+    // Give only swans and blossoms a gentle mobile boost; the pond itself stays unchanged.
+    const portraitBoost = W < 520 && H > W ? 1.16 : 1;
     let L = 78 * scale;
     /* ---------- offscreen layers ---------- */
     const paint = document.createElement("canvas"); // swans + leaves
@@ -1028,7 +1031,7 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
                 blooms.push({
                     t: 0.35 + r() * 0.7,
                     off: (r() - 0.5) * 22 * scale,
-                    r: (2.3 + r() * 1.6) * scale,
+                    r: (2.3 + r() * 1.6) * scale * portraitBoost,
                     rot: r() * Math.PI,
                     hue: 342 + r() * 14,
                     light: 86 + r() * 8,
@@ -1521,7 +1524,7 @@ export function startPond(host, waterCanvas, swanCanvas, initial = {}) {
             h: rand(-Math.PI, Math.PI),
             w: 0,
             v: 0,
-            size: [1.08, 0.93, 1][i % 3] * rand(0.97, 1.03),
+            size: [1.08, 0.93, 1][i % 3] * rand(0.97, 1.03) * portraitBoost,
             pace: [0.9, 1.08, 0.97][i % 3] * rand(0.95, 1.05),
             state: "glide",
             tx: 0,
