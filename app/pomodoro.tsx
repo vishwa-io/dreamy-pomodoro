@@ -91,6 +91,9 @@ export default function Pomodoro() {
 
       if (currentMode === "focus") {
         recordFocusCompletion();
+        notifyTimerFinished(currentMode);
+      } else {
+        notifyTimerFinished(currentMode);
       }
 
       const nextMode: Mode = currentMode === "focus" ? "break" : "focus";
