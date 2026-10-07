@@ -63,15 +63,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 
-  const response = await supabaseRequest("?on_conflict=client_id,day", {
+  const response = await supabaseRequest("/rpc/increment_pomodoro_stat", {
     method: "POST",
-    headers: {
-      Prefer: "resolution=merge-duplicates,return=minimal",
-    },
     body: JSON.stringify({
-      client_id: clientId,
-      day,
-      sessions: 1,
+      p_client_id: clientId,
+      p_day: day,
     }),
   });
 
