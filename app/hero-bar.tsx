@@ -9,6 +9,7 @@ export default function HeroBar() {
     <div className="hero-bar" aria-label="Pond controls">
       <div className="hero-controls">
         <AmbientToggle />
+        <NotificationToggle />
         <ThemeToggle />
         <Todo />
         <Link className="about-pill-link" href="/notes/test">stats</Link>
@@ -32,6 +33,79 @@ function AmbientToggle() {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M11 5 6 9H2v6h4l5 4V5Z" />
         {audible ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M19 5a10 10 0 0 1 0 14" /></> : <><path d="m22 9-6 6" /><path d="m16 9 6 6" /></>}
+      </svg>
+    </button>
+  );
+}
+
+function NotificationToggle() {
+  const [enabled, setEnabled] = useState(false);
+  const [permission, setPermission] = useState<NotificationPermission | "unsupported">("default");
+
+  useEffect(() => {
+    if (typeof Notification === "undefined") {
+      setPermission("unsupported");
+      return;
+    }
+
+    setPermission(Notification.permission);
+
+    try {
+      setEnabled(
+        Notification.permission === "granted" &&
+        localStorage.getItem("dreamy-notifications-enabled") === "true"
+      );
+    } catch {}
+  }, []);
+
+  const toggle = async () => {
+    if (typeof Notification === "undefined") return;
+
+    let nextPermission = Notification.permission;
+
+    if (nextPermission === "default") {
+      try {
+        nextPermission = await Notification.requestPermission();
+        setPermission(nextPermission);
+      } catch {
+        return;
+      }
+    }
+
+    if (nextPermission !== "granted") {
+      setEnabled(false);
+      try { localStorage.setItem("dreamy-notifications-enabled", "false"); } catch {}
+      return;
+    }
+
+    setEnabled((current) => {
+      const next = !current;
+      try { localStorage.setItem("dreamy-notifications-enabled", String(next)); } catch {}
+      return next;
+    });
+  };
+
+  const label =
+    permission === "unsupported"
+      ? "Notifications are not supported"
+      : permission === "denied"
+        ? "Notifications are blocked in browser settings"
+        : enabled
+          ? "Disable timer notifications"
+          : "Enable timer notifications";
+
+  return (
+    <button
+      className={`control-icon notification-toggle${enabled ? " enabled" : ""}`}
+      type="button"
+      onClick={toggle}
+      aria-label={label}
+      title={label}
+      disabled={permission === "unsupported"}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+        <path d="M10 21h4" />
       </svg>
     </button>
   );
