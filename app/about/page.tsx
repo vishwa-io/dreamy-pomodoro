@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PondHero from "../pond/pond-hero";
 
 export const metadata: Metadata = {
   title: "About · Dreamy Pomodoro",
@@ -8,19 +9,22 @@ export const metadata: Metadata = {
 export default function About() {
   return (
     <main className="about-page">
-      <div className="about-shell">
+      <PondHero />
+
+      <div className="about-overlay">
         <Link href="/" className="about-back">
-          ← back to the pond
+          <span>←</span> back to the pond
         </Link>
 
         <section className="about-card" aria-labelledby="about-title">
           <div className="about-kicker">dreamy pomodoro</div>
+
           <h1 id="about-title">A quiet little timer for slow, focused days.</h1>
 
           <p className="about-lede">
             I made Dreamy Pomodoro as a softer alternative to productivity apps
-            that can feel a little too busy. The idea is simple: sit by the
-            pond, put on some music, and focus on one thing at a time.
+            that can feel a little too busy. Sit by the pond, put on some music,
+            and focus on one thing at a time.
           </p>
 
           <div className="about-grid">
@@ -58,7 +62,7 @@ export default function About() {
               GitHub
             </a>
             <a
-              href="https://www.linkedin.com/in/vishwa-patel-0598a238/"
+              href="https://www.linkedin.com/in/vishwa-patel-0598a2388/"
               target="_blank"
               rel="noreferrer"
             >
