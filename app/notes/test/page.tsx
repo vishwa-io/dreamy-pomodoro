@@ -1,123 +1,187 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import PondHero from "../../pond/pond-hero";
 
-type GitHubUser = {
-  login: string;
-  avatar_url: string;
-  public_repos: number;
-  followers: number;
-  following: number;
-};
+type Counts = Record<string, number>;
 
-type GitHubRepo = {
-  stargazers_count: number;
-  forks_count: number;
-};
+const STORAGE_KEY = "dreamy-pomodoro-stats";
+const CLIENT_KEY = "dreamy-pomodoro-client";
 
-async function getGitHubStats() {
+function getClientId() {
   try {
-    const headers = {
-      Accept: "application/vnd.github+json",
-      "User-Agent": "dreamy-pomodoro",
-    };
-
-    const [userResponse, reposResponse] = await Promise.all([
-      fetch("https://api.github.com/users/vishwa-io", {
-        headers,
-        next: { revalidate: 3600 },
-      }),
-      fetch("https://api.github.com/users/vishwa-io/repos?per_page=100&sort=updated", {
-        headers,
-        next: { revalidate: 3600 },
-      }),
-    ]);
-
-    if (!userResponse.ok || !reposResponse.ok) {
-      throw new Error("GitHub request failed");
-    }
-
-    const user = (await userResponse.json()) as GitHubUser;
-    const repos = (await reposResponse.json()) as GitHubRepo[];
-
-    return {
-      login: user.login,
-      avatar: user.avatar_url,
-      repos: user.public_repos,
-      followers: user.followers,
-      following: user.following,
-      stars: repos.reduce((total, repo) => total + repo.stargazers_count, 0),
-      forks: repos.reduce((total, repo) => total + repo.forks_count, 0),
-    };
+    const saved = localStorage.getItem(CLIENT_KEY);
+    if (saved) return saved;
+    const id = crypto.randomUUID();
+    localStorage.setItem(CLIENT_KEY, id);
+    return id;
   } catch {
-    return {
-      login: "vishwa-io",
-      avatar: "",
-      repos: 0,
-      followers: 0,
-      following: 0,
-      stars: 0,
-      forks: 0,
-    };
+    return "local";
   }
 }
 
-export const metadata = {
-  title: "GitHub · Dreamy Pomodoro",
-};
+function loadLocal(): Counts {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    return saved && typeof saved === "object" ? saved : {};
+  } catch {
+    return {};
+  }
+}
 
-export default async function GitHubStats() {
-  const stats = await getGitHubStats();
+function saveLocal(counts: Counts) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(counts));
+  } catch {}
+}
+
+function addDays(date: Date, amount: number) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + amount);
+  return next;
+}
+
+function keyFor(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function buildYear(year: number) {
+  const start = new Date(year, 0, 1);
+  const end = new Date(year, 11, 31);
+  const gridStart = addDays(start, -start.getDay());
+  const gridEnd = addDays(end, 6 - end.getDay());
+
+  const weeks: Date[][] = [];
+  let cursor = gridStart;
+
+  while (cursor <= gridEnd) {
+    const week: Date[] = [];
+    for (let day = 0; day < 7; day += 1) {
+      week.push(cursor);
+      cursor = addDays(cursor, 1);
+    }
+    weeks.push(week);
+  }
+
+  return weeks;
+}
+
+function levelFor(count: number) {
+  if (count <= 0) return 0;
+  if (count === 1) return 1;
+  if (count === 2) return 2;
+  if (count === 3) return 3;
+  return 4;
+}
+
+function formatDate(date: Date, count: number) {
+  const formatted = new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+
+  if (count === 0) return `${formatted} · no focus sessions`;
+  return `${formatted} · ${count} focus session${count === 1 ? "" : "s"}`;
+}
+
+export default function StatsPage() {
+  const year = new Date().getFullYear();
+  const [counts, setCounts] = useState<Counts>({});
+
+  const weeks = useMemo(() => buildYear(year), [year]);
+
+  useEffect(() => {
+    const local = loadLocal();
+    setCounts(local);
+
+    const clientId = getClientId();
+
+    fetch(`/api/pomodoro-stats?clientId=${encodeURIComponent(clientId)}&year=${year}`)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!data?.counts) return;
+        const merged = { ...local, ...data.counts };
+        setCounts(merged);
+        saveLocal(merged);
+      })
+      .catch(() => {});
+  }, [year]);
 
   return (
     <main className="about-page stats-page">
       <PondHero />
+
       <div className="stats-shell">
         <Link href="/" className="about-back">
           <span>←</span> back to the pond
         </Link>
 
-        <section className="about-card stats-card" aria-labelledby="stats-title">
-          <div className="stats-heading">
-            <div className="stats-mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 .75A11.25 11.25 0 0 0 8.44 22.67c.56.1.77-.24.77-.54v-2.1c-3.14.68-3.8-1.34-3.8-1.34-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.39-1.22.71-1.5-2.51-.29-5.15-1.26-5.15-5.62 0-1.24.44-2.25 1.16-3.05-.12-.29-.5-1.44.11-3 0 0 .94-.3 3.1 1.16A10.7 10.7 0 0 1 12 6.1c.96 0 1.93.13 2.83.38 2.15-1.46 3.09-1.16 3.09-1.16.62 1.56.23 2.71.12 3  .72.8 1.16 1.81 1.16 3.05 0 4.37-2.65 5.32-5.17 5.61.41.35.77 1.04.77 2.1v3.11c0 .3.2.65.78.54A11.25 11.25 0 0 0 12 .75Z" />
-              </svg>
-            </div>
+        <section className="stats-panel" aria-labelledby="stats-title">
+          <div className="stats-topline">
             <div>
-              <div className="about-kicker">github stats</div>
-              <h1 id="stats-title">{stats.login}</h1>
+              <div className="about-kicker">focus</div>
+              <h1 id="stats-title">{year}</h1>
+            </div>
+            <div className="stats-legend" aria-label="Focus intensity">
+              <span>less</span>
+              <i className="stats-cell level-0" />
+              <i className="stats-cell level-1" />
+              <i className="stats-cell level-2" />
+              <i className="stats-cell level-3" />
+              <i className="stats-cell level-4" />
+              <span>more</span>
             </div>
           </div>
 
-          <div className="stats-rule" />
+          <div className="stats-heatmap-wrap">
+            <div className="stats-months" aria-hidden="true">
+              {weeks.map((week, index) => {
+                const first = week[0];
+                const show =
+                  first.getDate() <= 7 ||
+                  index === 0;
 
-          <div className="stats-grid">
-            <div className="stats-item">
-              <span>repositories</span>
-              <strong>{stats.repos}</strong>
+                return (
+                  <span
+                    key={keyFor(first)}
+                    style={{ gridColumn: index + 1 }}
+                  >
+                    {show ? new Intl.DateTimeFormat("en", { month: "short" }).format(first) : ""}
+                  </span>
+                );
+              })}
             </div>
-            <div className="stats-item">
-              <span>stars</span>
-              <strong>{stats.stars}</strong>
+
+            <div className="stats-heatmap" role="img" aria-label={`Pomodoro focus activity for ${year}`}>
+              {weeks.map((week) =>
+                week.map((date) => {
+                  const key = keyFor(date);
+                  const count = counts[key] || 0;
+                  const inYear = date.getFullYear() === year;
+
+                  return (
+                    <span
+                      key={key}
+                      className={`stats-cell level-${levelFor(count)}${inYear ? "" : " outside"}`}
+                      title={inYear ? formatDate(date, count) : ""}
+                      aria-hidden="true"
+                    />
+                  );
+                })
+              )}
             </div>
-            <div className="stats-item">
-              <span>followers</span>
-              <strong>{stats.followers}</strong>
-            </div>
-            <div className="stats-item">
-              <span>following</span>
-              <strong>{stats.following}</strong>
+
+            <div className="stats-days" aria-hidden="true">
+              <span>mon</span>
+              <span>wed</span>
+              <span>fri</span>
             </div>
           </div>
-
-          <a
-            className="stats-profile-link"
-            href="https://github.com/vishwa-io"
-            target="_blank"
-            rel="noreferrer"
-          >
-            view github profile <span>↗</span>
-          </a>
         </section>
       </div>
     </main>
