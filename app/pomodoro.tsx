@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const FOCUS_SECONDS = 25 * 60;
 const BREAK_SECONDS = 5 * 60;
@@ -21,8 +21,14 @@ function recordFocusCompletion() {
   const day = todayKey();
 
   try {
-    const saved = JSON.parse(localStorage.getItem(STATS_KEY) || "{}") as Counts;
-    saved[day] = (saved[day] || 0) + 1;
+    const raw = localStorage.getItem(STATS_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    const saved: Counts =
+      parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+
+    const previous = Number(saved[day]);
+    saved[day] = Number.isFinite(previous) && previous >= 0 ? Math.floor(previous) + 1 : 1;
+
     localStorage.setItem(STATS_KEY, JSON.stringify(saved));
     window.dispatchEvent(new Event("dreamy-stats-updated"));
   } catch {}
@@ -33,25 +39,49 @@ export default function Pomodoro() {
   const [seconds, setSeconds] = useState(FOCUS_SECONDS);
   const [running, setRunning] = useState(false);
 
+  const secondsRef = useRef(seconds);
+  const modeRef = useRef(mode);
+
+  useEffect(() => {
+    secondsRef.current = seconds;
+  }, [seconds]);
+
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
+
   useEffect(() => {
     if (!running) return;
 
     const timer = window.setInterval(() => {
-      setSeconds((current) => {
-        if (current > 1) return current - 1;
+      const currentSeconds = secondsRef.current;
 
-        if (mode === "focus") {
-          recordFocusCompletion();
-        }
+      if (currentSeconds > 1) {
+        const nextSeconds = currentSeconds - 1;
+        secondsRef.current = nextSeconds;
+        setSeconds(nextSeconds);
+        return;
+      }
 
-        setRunning(false);
-        setMode((currentMode) => (currentMode === "focus" ? "break" : "focus"));
-        return mode === "focus" ? BREAK_SECONDS : FOCUS_SECONDS;
-      });
+      const currentMode = modeRef.current;
+
+      if (currentMode === "focus") {
+        recordFocusCompletion();
+      }
+
+      const nextMode: Mode = currentMode === "focus" ? "break" : "focus";
+      const nextSeconds = currentMode === "focus" ? BREAK_SECONDS : FOCUS_SECONDS;
+
+      modeRef.current = nextMode;
+      secondsRef.current = nextSeconds;
+
+      setRunning(false);
+      setMode(nextMode);
+      setSeconds(nextSeconds);
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [running, mode]);
+  }, [running]);
 
   useEffect(() => {
     document.title = `${formatTime(seconds)} · ${mode}`;
@@ -64,13 +94,17 @@ export default function Pomodoro() {
 
   const reset = () => {
     setRunning(false);
-    setSeconds(mode === "focus" ? FOCUS_SECONDS : BREAK_SECONDS);
+    const nextSeconds = mode === "focus" ? FOCUS_SECONDS : BREAK_SECONDS;
+    secondsRef.current = nextSeconds;
+    setSeconds(nextSeconds);
   };
 
   const switchMode = (next: Mode) => {
     setRunning(false);
+    modeRef.current = next;
+    secondsRef.current = next === "focus" ? FOCUS_SECONDS : BREAK_SECONDS;
     setMode(next);
-    setSeconds(next === "focus" ? FOCUS_SECONDS : BREAK_SECONDS);
+    setSeconds(secondsRef.current);
   };
 
   return (
