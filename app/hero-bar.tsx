@@ -1,15 +1,17 @@
 "use client";
 
-import Link from "next/link";\nimport { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAmbient } from "./audio-provider";
 
 export default function HeroBar() {
   return (
-    <div className="hero-bar" aria-label="Pond controls">\n      <Link className="about-link" href="/about">about</Link>
+    <div className="hero-bar" aria-label="Pond controls">
       <div className="hero-controls">
         <AmbientToggle />
         <ThemeToggle />
         <Todo />
+        <Link className="about-pill-link" href="/about">about</Link>
       </div>
     </div>
   );
