@@ -63,7 +63,15 @@ function buildMonthMarkers(weeks: Week[]) {
 function loadCounts(): Counts {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    return saved && typeof saved === "object" ? saved : {};
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return {};
+
+    return Object.entries(saved).reduce<Counts>((result, [day, value]) => {
+      const count = Number(value);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(day) && Number.isFinite(count) && count > 0) {
+        result[day] = Math.floor(count);
+      }
+      return result;
+    }, {});
   } catch {
     return {};
   }
