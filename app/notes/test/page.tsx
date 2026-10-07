@@ -48,7 +48,7 @@ function buildMonthMarkers(weeks: Week[]) {
       (date) =>
         date >= START_DATE &&
         date <= END_DATE &&
-        date.getDate() <= 7
+        date.getDate() === 1
     );
 
     return first
@@ -175,7 +175,7 @@ export default function StatsPage() {
                   aria-label="Pomodoro focus sessions by day, shown as a GitHub-style contribution calendar"
                 >
                   {weeks.map((week, weekIndex) => (
-                    <div className="stats-week" key={weekIndex}>
+                    <div className="stats-week" key={weekIndex} aria-hidden="true">
                       {week.map((date) => {
                         const key = keyFor(date);
                         const outside =
